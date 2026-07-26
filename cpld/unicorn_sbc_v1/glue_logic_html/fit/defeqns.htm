@@ -1,0 +1,99 @@
+<html><head><link type='text/css' href='style.css' rel='stylesheet'></head><body class='pgBgnd'>
+<h3 align='center'>Equations</h3>
+<table width='90%' align='center' border='1' cellpadding='0' cellspacing='0'>
+<tr><td>
+</td></tr><tr><td>
+********** Mapped Logic **********
+</td></tr><tr><td>
+</td></tr><tr><td>
+BERR_n <= '1';
+</td></tr><tr><td>
+</td></tr><tr><td>
+DPUART_CS_n <= NOT ((dpuart_select AND NOT LDS_n));
+</td></tr><tr><td>
+</td></tr><tr><td>
+DPUART_IACK_n <= '1';
+</td></tr><tr><td>
+FDCPE_DTACK_n: FDCPE port map (DTACK_n,DTACK_n_D,NOT CLK,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DTACK_n_D <= ((NOT AS_n AND NOT DTACK_n)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT AS_n AND dtack_n_armed AND any_select));
+</td></tr><tr><td>
+</td></tr><tr><td>
+HALT_n_I <= '0';
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HALT_n <= HALT_n_I when RES_n = '1' else 'Z';
+</td></tr><tr><td>
+</td></tr><tr><td>
+I2C_CS_n <= NOT ((i2c_select AND NOT LDS_n));
+</td></tr><tr><td>
+</td></tr><tr><td>
+I2C_IACK_n <= '1';
+</td></tr><tr><td>
+</td></tr><tr><td>
+IPL0_n <= DPUART_IRQ_n;
+</td></tr><tr><td>
+</td></tr><tr><td>
+IPL1_n <= (I2C_IRQ_n AND DPUART_IRQ_n);
+</td></tr><tr><td>
+</td></tr><tr><td>
+IPL2_n <= '1';
+</td></tr><tr><td>
+FDCPE_RAM_CS_n: FDCPE port map (RAM_CS_n,RAM_CS_n_D,NOT AS_n,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM_CS_n_D <= ((NOT A22 AND NOT A21 AND A18 AND NOT A20 AND NOT A23)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT A22 AND NOT A21 AND A17 AND NOT A20 AND NOT A23)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT A22 AND NOT A21 AND NOT A20 AND A19 AND NOT A23)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT A22 AND NOT A21 AND NOT A20 AND A16 AND NOT A23)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND A20 AND NOT A19 AND NOT A16 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT A23));
+</td></tr><tr><td>
+</td></tr><tr><td>
+RAM_LB_OE_n <= NOT ((RW_n AND NOT LDS_n AND NOT RAM_CS_n));
+</td></tr><tr><td>
+</td></tr><tr><td>
+RAM_LB_WE_n <= NOT ((NOT RW_n AND NOT LDS_n AND NOT RAM_CS_n));
+</td></tr><tr><td>
+</td></tr><tr><td>
+RAM_UB_OE_n <= NOT ((RW_n AND NOT RAM_CS_n AND NOT UDS_n));
+</td></tr><tr><td>
+</td></tr><tr><td>
+RAM_UB_WE_n <= NOT ((NOT RW_n AND NOT RAM_CS_n AND NOT UDS_n));
+</td></tr><tr><td>
+FDCPE_ROM_CS_n: FDCPE port map (ROM_CS_n,ROM_CS_n_D,NOT AS_n,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ROM_CS_n_D <= (NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND NOT A20 AND NOT A19 AND NOT A16 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT A23);
+</td></tr><tr><td>
+</td></tr><tr><td>
+ROM_LB_OE_n <= NOT ((RW_n AND NOT LDS_n AND NOT ROM_CS_n));
+</td></tr><tr><td>
+</td></tr><tr><td>
+ROM_UB_OE_n <= NOT ((RW_n AND NOT UDS_n AND NOT ROM_CS_n));
+</td></tr><tr><td>
+FDCPE_any_select: FDCPE port map (any_select,any_select_D,NOT AS_n,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any_select_D <= ((NOT A22 AND NOT A21 AND NOT A20 AND NOT A23)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND NOT A19 AND NOT A16 AND NOT A23)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT A9 AND NOT A15 AND NOT A14 AND NOT A13 AND NOT A12 AND NOT A11 AND NOT A10 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND NOT A19 AND NOT A23));
+</td></tr><tr><td>
+FDCPE_dpuart_select: FDCPE port map (dpuart_select,dpuart_select_D,NOT AS_n,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dpuart_select_D <= (NOT A9 AND NOT A8 AND NOT A15 AND NOT A14 AND NOT A13 AND NOT A12 AND NOT A11 AND NOT A10 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND A20 AND NOT A19 AND A16 AND NOT A23);
+</td></tr><tr><td>
+FDCPE_dtack_n_armed: FDCPE port map (dtack_n_armed,dtack_n_armed_D,NOT CLK,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dtack_n_armed_D <= ((NOT AS_n AND dtack_n_armed)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT AS_n AND any_select));
+</td></tr><tr><td>
+FDCPE_i2c_select: FDCPE port map (i2c_select,i2c_select_D,NOT AS_n,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i2c_select_D <= (NOT A9 AND A8 AND NOT A15 AND NOT A14 AND NOT A13 AND NOT A12 AND NOT A11 AND NOT A10 AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND A20 AND NOT A19 AND A16 AND NOT A23);
+</td></tr><tr><td>
+Register Legend:
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FDCPE (Q,D,C,CLR,PRE,CE); 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FTCPE (Q,D,C,CLR,PRE,CE); 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LDCP  (Q,D,G,CLR,PRE); 
+</td></tr><tr><td>
+</td></tr>
+</table>
+<form><span class="pgRef"><table width="90%" align="center"><tr>
+<td align="left"><input type="button" onclick="javascript:parent.leftnav.showTop()" onmouseover="window.status='goto top of page'; return true;" onmouseout="window.status=''" value="back to top"></td>
+<td align="right"><input type="button" onclick="window.print()" onmouseover="window.status='print page'; return true;" onmouseout="window.status=''" value="print page"></td>
+</tr></table></span></form>
+</body></html>

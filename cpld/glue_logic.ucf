@@ -1,0 +1,66 @@
+
+# ============== Address Lines ==============
+NET "A1"  LOC = "P1";
+NET "A2"  LOC = "P2";
+NET "A3"  LOC = "P4";
+NET "A4"  LOC = "P5";
+NET "A5"  LOC = "P6";
+NET "A6"  LOC = "P7";
+NET "A7"  LOC = "P8";
+NET "A8"  LOC = "P9";
+NET "A9"  LOC = "P10";
+NET "A10" LOC = "P11";
+NET "A11" LOC = "P12";
+NET "A12" LOC = "P13";
+NET "A13" LOC = "P15";
+NET "A14" LOC = "P16";
+NET "A15" LOC = "P17";
+NET "A16" LOC = "P18";
+NET "A17" LOC = "P19";
+NET "A18" LOC = "P20";
+NET "A19" LOC = "P22";
+NET "A20" LOC = "P23";
+NET "A21" LOC = "P24";
+NET "A22" LOC = "P25";
+NET "A23" LOC = "P27";
+
+# ============== CPU Control Signals ==============
+NET "AS_n"    LOC = "P31";
+NET "UDS_n"   LOC = "P32";
+NET "LDS_n"   LOC = "P33";
+NET "DTACK_n" LOC = "P34" | DRIVE = 12 | SLEW = SLOW;
+
+NET "RW_n"    LOC = "P35";
+NET "CLK"     LOC = "P36";                    # Clock - no pullup
+
+NET "IPL0_n"  LOC = "P38";
+NET "IPL1_n"  LOC = "P39";
+NET "IPL2_n"  LOC = "P40";
+
+NET "RES_n"   LOC = "P42";
+NET "HALT_n"  LOC = "P43";
+
+NET "FC2"     LOC = "P44";
+NET "FC1"     LOC = "P45";
+NET "FC0"     LOC = "P46";
+
+NET "ROM_CS_n"    LOC = "P47" | DRIVE = 12 | SLEW = SLOW;
+NET "ROM_LB_OE_n" LOC = "P48" | DRIVE = 12 | SLEW = SLOW;
+NET "ROM_UB_OE_n" LOC = "P49" | DRIVE = 12 | SLEW = SLOW;
+
+NET "RAM_CS_n"    LOC = "P50" | DRIVE = 12 | SLEW = SLOW;
+NET "RAM_LB_OE_n" LOC = "P51" | DRIVE = 12 | SLEW = SLOW;
+NET "RAM_UB_OE_n" LOC = "P52" | DRIVE = 12 | SLEW = SLOW;
+NET "RAM_LB_WE_n" LOC = "P56" | DRIVE = 12 | SLEW = SLOW;
+NET "RAM_UB_WE_n" LOC = "P57" | DRIVE = 12 | SLEW = SLOW;
+
+NET "I2C_CS_n"    LOC = "P58" | DRIVE = 12 | SLEW = SLOW;
+NET "I2C_IACK_n"  LOC = "P59" | DRIVE = 12 | SLEW = SLOW;
+NET "I2C_IRQ_n"   LOC = "P60";
+
+NET "DPUART_CS_n"   LOC = "P61" | DRIVE = 12 | SLEW = SLOW;
+NET "DPUART_IACK_n" LOC = "P62" | DRIVE = 12 | SLEW = SLOW;
+NET "DPUART_IRQ_n"  LOC = "P63";
+
+NET "BERR_n" LOC = "P64" | DRIVE = 12 | SLEW = SLOW;
+NET "A*" IOB = TRUE;

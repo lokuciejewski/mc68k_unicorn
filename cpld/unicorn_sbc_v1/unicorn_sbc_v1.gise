@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<generated_project xmlns="http://www.xilinx.com/XMLSchema" xmlns:xil_pn="http://www.xilinx.com/XMLSchema">
+
+  <!--                                                          -->
+
+  <!--             For tool use only. Do not edit.              -->
+
+  <!--                                                          -->
+
+  <!-- ProjectNavigator created generated project file.         -->
+
+  <!-- For use in tracking generated file and other information -->
+
+  <!-- allowing preservation of process status.                 -->
+
+  <!--                                                          -->
+
+  <!-- Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved. -->
+
+  <version xmlns="http://www.xilinx.com/XMLSchema">11.1</version>
+
+  <sourceproject xmlns="http://www.xilinx.com/XMLSchema" xil_pn:fileType="FILE_XISE" xil_pn:name="unicorn_sbc_v1.xise"/>
+
+  <files xmlns="http://www.xilinx.com/XMLSchema">
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="_ngo"/>
+    <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
+    <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/xst.xmsgs"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_NGDBUILD_LOG" xil_pn:name="glue_logic.bld"/>
+    <file xil_pn:fileType="FILE_CMD_LOG" xil_pn:name="glue_logic.cmd_log"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_GYD" xil_pn:name="glue_logic.gyd"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_JEDEC" xil_pn:name="glue_logic.jed"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_LSO" xil_pn:name="glue_logic.lso"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_MFD" xil_pn:name="glue_logic.mfd"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_NGA" xil_pn:name="glue_logic.nga"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_NGC" xil_pn:name="glue_logic.ngc"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_NGD" xil_pn:name="glue_logic.ngd"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_NGR" xil_pn:name="glue_logic.ngr"/>
+    <file xil_pn:fileType="FILE_PAD_MISC" xil_pn:name="glue_logic.pad"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_PNX" xil_pn:name="glue_logic.pnx"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="glue_logic.prj"/>
+    <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="glue_logic.rpt"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_STX" xil_pn:name="glue_logic.stx"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_REPORT" xil_pn:name="glue_logic.syr"/>
+    <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="glue_logic.tim"/>
+    <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="glue_logic.tspec"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_VM6" xil_pn:name="glue_logic.vm6"/>
+    <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="glue_logic.xml"/>
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="glue_logic.xst"/>
+    <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="glue_logic_build.xml"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="glue_logic_html"/>
+    <file xil_pn:fileType="FILE_XRPT" xil_pn:name="glue_logic_ngdbuild.xrpt"/>
+    <file xil_pn:fileType="FILE_PAD_EXCEL_REPORT" xil_pn:name="glue_logic_pad.csv"/>
+    <file xil_pn:fileType="FILE_HTML" xil_pn:name="glue_logic_summary.html"/>
+    <file xil_pn:fileType="FILE_XRPT" xil_pn:name="glue_logic_xst.xrpt"/>
+    <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="webtalk_pn.xml"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xlnx_auto_0_xdb"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xst"/>
+  </files>
+
+  <transforms xmlns="http://www.xilinx.com/XMLSchema">
+    <transform xil_pn:end_ts="1785085522" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1785085522">
+      <status xil_pn:value="SuccessfullyRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1785085522" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="-1569441112853331551" xil_pn:start_ts="1785085522">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1785085524" xil_pn:in_ck="5376823884968578270" xil_pn:name="TRANEXT_xstsynthesize_xc9500xl" xil_pn:prop_ck="3075223052646039104" xil_pn:start_ts="1785085522">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="WarningsGenerated"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
+      <outfile xil_pn:name="glue_logic.lso"/>
+      <outfile xil_pn:name="glue_logic.ngc"/>
+      <outfile xil_pn:name="glue_logic.ngr"/>
+      <outfile xil_pn:name="glue_logic.prj"/>
+      <outfile xil_pn:name="glue_logic.stx"/>
+      <outfile xil_pn:name="glue_logic.syr"/>
+      <outfile xil_pn:name="glue_logic.xst"/>
+      <outfile xil_pn:name="glue_logic_xst.xrpt"/>
+      <outfile xil_pn:name="webtalk_pn.xml"/>
+      <outfile xil_pn:name="xst"/>
+    </transform>
+    <transform xil_pn:end_ts="1785085562" xil_pn:in_ck="7743339364853876038" xil_pn:name="TRAN_compileBCD2" xil_pn:prop_ck="8767382908431540732" xil_pn:start_ts="1785085562">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1785085564" xil_pn:in_ck="-388569963922068154" xil_pn:name="TRAN_ngdbuild" xil_pn:prop_ck="-2081320714713457669" xil_pn:start_ts="1785085562">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="_ngo"/>
+      <outfile xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
+      <outfile xil_pn:name="glue_logic.bld"/>
+      <outfile xil_pn:name="glue_logic.ngd"/>
+      <outfile xil_pn:name="glue_logic_ngdbuild.xrpt"/>
+    </transform>
+    <transform xil_pn:end_ts="1785085567" xil_pn:in_ck="7743339364853868545" xil_pn:name="TRANEXT_vm6File_xc9500xl" xil_pn:prop_ck="-760497439030787026" xil_pn:start_ts="1785085564">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="WarningsGenerated"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="glue_logic.gyd"/>
+      <outfile xil_pn:name="glue_logic.mfd"/>
+      <outfile xil_pn:name="glue_logic.nga"/>
+      <outfile xil_pn:name="glue_logic.pad"/>
+      <outfile xil_pn:name="glue_logic.pnx"/>
+      <outfile xil_pn:name="glue_logic.rpt"/>
+      <outfile xil_pn:name="glue_logic.tim"/>
+      <outfile xil_pn:name="glue_logic.tspec"/>
+      <outfile xil_pn:name="glue_logic.vm6"/>
+      <outfile xil_pn:name="glue_logic.xml"/>
+      <outfile xil_pn:name="glue_logic_build.xml"/>
+      <outfile xil_pn:name="glue_logic_html"/>
+      <outfile xil_pn:name="glue_logic_pad.csv"/>
+    </transform>
+    <transform xil_pn:end_ts="1785085568" xil_pn:in_ck="7743339364853877409" xil_pn:name="TRANEXT_crtProg_xc9500" xil_pn:prop_ck="-6294026017969277533" xil_pn:start_ts="1785085567">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="glue_logic.jed"/>
+    </transform>
+    <transform xil_pn:end_ts="1785085531" xil_pn:in_ck="7743339364853877409" xil_pn:name="TRAN_timRpt" xil_pn:prop_ck="111903974446" xil_pn:start_ts="1785085530">
+      <status xil_pn:value="AbortedRun"/>
+      <status xil_pn:value="WarningsGenerated"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="InputChanged"/>
+    </transform>
+  </transforms>
+
+</generated_project>

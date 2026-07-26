@@ -1,0 +1,12 @@
+xst -intstyle ise -ifn "/home/anemiq/Projects/unicorn_sbc/cpld/unicorn_sbc_v1/glue_logic.xst" -ofn "/home/anemiq/Projects/unicorn_sbc/cpld/unicorn_sbc_v1/glue_logic.syr" 
+ngdbuild -intstyle ise -dd _ngo -i -p xc9572xl-VQ64-10 glue_logic.ngc glue_logic.ngd  
+cpldfit -intstyle ise -p xc9572xl-10-VQ64 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 54 -pterms 25 -unused float -power std -terminate keeper glue_logic.ngd 
+XSLTProcess glue_logic_build.xml 
+tsim -intstyle ise glue_logic glue_logic.nga 
+taengine -intstyle ise -f glue_logic -w --format html1 -l glue_logic_html/tim/timing_report.htm 
+hprep6 -s IEEE1149 -n glue_logic -i glue_logic 
+ngdbuild -intstyle ise -dd _ngo -i -p xc9572xl-VQ64-10 glue_logic.ngc glue_logic.ngd  
+cpldfit -intstyle ise -p xc9572xl-10-VQ64 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 54 -pterms 25 -unused float -power std -terminate keeper glue_logic.ngd 
+XSLTProcess glue_logic_build.xml 
+tsim -intstyle ise glue_logic glue_logic.nga 
+hprep6 -s IEEE1149 -n glue_logic -i glue_logic 

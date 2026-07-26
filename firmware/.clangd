@@ -1,0 +1,24 @@
+CompileFlags:
+  # Force the cross-compiler as the driver (important for target inference + include extraction)
+  Compiler: m68k-elf-gcc
+
+  Add:
+    # Tell clang (the frontend used by clangd) the correct target
+    - --target=m68k-elf
+
+    # Common Motorola 68k flags – adjust to your project
+    - -mcpu=68010          # or 68010 / 68020 / 68030 / 68040 / 68060 / cpu32 etc.
+    - -msoft-float        # if you don't have an FPU
+    - -fno-builtin
+    - -ffreestanding
+
+    # Project / newlib / libgcc include paths (add whatever you need)
+    # - -I${workspaceFolder}/include
+    # - -isystem /path/to/m68k-elf/include
+    # - -isystem /path/to/m68k-elf/m68k-elf/include
+
+  # Optional: prefer the cross-compiler's own builtin headers (stddef.h etc.)
+  # BuiltinHeaders: QueryDriver   # requires a matching --query-driver (see below)
+
+# Optional: point at a specific compile_commands.json location
+# CompilationDatabase: build

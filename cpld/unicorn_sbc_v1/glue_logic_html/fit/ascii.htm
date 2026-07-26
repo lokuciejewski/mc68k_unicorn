@@ -1,0 +1,481 @@
+<html><body>
+<pre>
+ 
+cpldfit:  version P.20131013                        Xilinx Inc.
+                                  Fitter Report
+Design Name: glue_logic                          Date:  7-26-2026,  7:06PM
+Device Used: XC9572XL-10-VQ64
+Fitting Status: Successful
+
+*************************  Mapped Resource Summary  **************************
+
+Macrocells     Product Terms    Function Block   Registers      Pins           
+Used/Tot       Used/Tot         Inps Used/Tot    Used/Tot       Used/Tot       
+22 /72  ( 31%) 25  /360  (  7%) 36 /216 ( 17%)   7  /72  ( 10%) 42 /52  ( 81%)
+
+** Function Block Resources **
+
+Function    Mcells      FB Inps     Pterms      IO          
+Block       Used/Tot    Used/Tot    Used/Tot    Used/Tot    
+FB1           7/18       20/54       14/90       9/13
+FB2           5/18        5/54        5/90      11/13
+FB3           6/18        2/54        1/90      10/14
+FB4           4/18        9/54        5/90      12/12*
+             -----       -----       -----      -----    
+             22/72       36/216      25/360     42/52 
+
+* - Resource is exhausted
+
+** Global Control Resources **
+
+Signal 'AS_n' mapped onto global clock net GCK1.
+Signal 'CLK' mapped onto global clock net GCK2.
+Signal 'RES_n' mapped onto global output enable net GTS2.
+Global set/reset net(s) unused.
+
+** Pin Resources **
+
+Signal Type    Required     Mapped  |  Pin Type            Used    Total 
+------------------------------------|------------------------------------
+Input         :   21          21    |  I/O              :    38      46
+Output        :   18          18    |  GCK/IO           :     2       3
+Bidirectional :    0           0    |  GTS/IO           :     2       2
+GCK           :    2           2    |  GSR/IO           :     0       1
+GTS           :    1           1    |
+GSR           :    0           0    |
+                 ----        ----
+        Total     42          42
+
+** Power Data **
+
+There are 22 macrocells in high performance mode (MCHP).
+There are 0 macrocells in low power mode (MCLP).
+End of Mapped Resource Summary
+**************************  Errors and Warnings  ***************************
+
+WARNING:Cpld - Unable to retrieve the path to the iSE Project Repository. Will
+   use the default filename of 'glue_logic.ise'.
+*************************  Summary of Mapped Logic  ************************
+
+** 18 Outputs **
+
+Signal              Total Total Loc     Pin  Pin     Pin     Pwr  Slew Reg Init
+Name                Pts   Inps          No.  Type    Use     Mode Rate State
+IPL0_n              1     1     FB1_5   9    I/O     O       STD  FAST 
+ROM_CS_n            1     8     FB1_10  18   I/O     O       STD  FAST SET
+RAM_CS_n            5     8     FB1_15  19   I/O     O       STD  FAST SET
+RAM_LB_WE_n         1     3     FB2_2   60   I/O     O       STD  FAST 
+RAM_UB_OE_n         1     3     FB2_5   61   I/O     O       STD  FAST 
+RAM_UB_WE_n         1     3     FB2_8   63   I/O     O       STD  FAST 
+ROM_LB_OE_n         1     3     FB2_12  4    I/O     O       STD  FAST 
+ROM_UB_OE_n         1     3     FB2_15  6    I/O     O       STD  FAST 
+IPL2_n              0     0     FB3_2   22   I/O     O       STD  FAST 
+I2C_IACK_n          0     0     FB3_5   24   I/O     O       STD  FAST 
+DPUART_IACK_n       0     0     FB3_6   34   I/O     O       STD  FAST 
+BERR_n              0     0     FB3_9   27   I/O     O       STD  FAST 
+IPL1_n              1     2     FB3_12  40   I/O     O       STD  FAST 
+HALT_n              0     0     FB3_14  35   I/O     O       STD  FAST 
+DTACK_n             2     4     FB4_2   43   I/O     O       STD  FAST RESET
+DPUART_CS_n         1     2     FB4_5   44   I/O     O       STD  FAST 
+I2C_CS_n            1     2     FB4_10  51   I/O     O       STD  FAST 
+RAM_LB_OE_n         1     3     FB4_14  50   I/O     O       STD  FAST 
+
+** 4 Buried Nodes **
+
+Signal              Total Total Loc     Pwr  Reg Init
+Name                Pts   Inps          Mode State
+i2c_select          1     16    FB1_14  STD  RESET
+dpuart_select       1     16    FB1_16  STD  RESET
+dtack_n_armed       2     3     FB1_17  STD  RESET
+any_select          3     15    FB1_18  STD  RESET
+
+** 24 Inputs **
+
+Signal              Loc     Pin  Pin     Pin     
+Name                        No.  Type    Use     
+UDS_n               FB1_2   8    I/O     I
+A19                 FB1_3   12   I/O     I
+A21                 FB1_4   13   I/O     I
+A16                 FB1_6   10   I/O     I
+AS_n                FB1_9   15~  GCK/I/O GCK/I
+CLK                 FB1_11  16~  GCK/I/O GCK
+DPUART_IRQ_n        FB2_3   58   I/O     I
+LDS_n               FB2_4   59   I/O     I
+A8                  FB2_6   62   I/O     I
+I2C_IRQ_n           FB2_10  1    I/O     I
+RES_n               FB2_11  2~   GTS/I/O GTS
+A15                 FB2_14  5    GTS/I/O I
+A20                 FB3_10  39   I/O     I
+A9                  FB3_15  36   I/O     I
+A17                 FB3_16  42   I/O     I
+A22                 FB3_17  38   I/O     I
+A11                 FB4_3   46   I/O     I
+A23                 FB4_4   47   I/O     I
+A18                 FB4_6   49   I/O     I
+A12                 FB4_8   45   I/O     I
+RW_n                FB4_11  48   I/O     I
+A14                 FB4_12  52   I/O     I
+A13                 FB4_15  56   I/O     I
+A10                 FB4_17  57   I/O     I
+
+Legend:
+Pin No. - ~ - User Assigned
+**************************  Function Block Details  ************************
+Legend:
+Total Pt     - Total product terms used by the macrocell signal
+Imp Pt       - Product terms imported from other macrocells
+Exp Pt       - Product terms exported to other macrocells
+               in direction shown
+Unused Pt    - Unused local product terms remaining in macrocell
+Loc          - Location where logic was mapped in device
+Pin Type/Use - I  - Input             GCK - Global Clock
+               O  - Output            GTS - Global Output Enable
+              (b) - Buried macrocell  GSR - Global Set/Reset
+X            - Signal used as input to the macrocell logic.
+Pin No.      - ~  - User Assigned
+*********************************** FB1  ***********************************
+Number of function block inputs used/remaining:               20/34
+Number of signals used by logic mapping into function block:  20
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+(unused)              0       0     0   5     FB1_1         (b)     
+(unused)              0       0     0   5     FB1_2   8     I/O     I
+(unused)              0       0     0   5     FB1_3   12    I/O     I
+(unused)              0       0     0   5     FB1_4   13    I/O     I
+IPL0_n                1       0     0   4     FB1_5   9     I/O     O
+(unused)              0       0     0   5     FB1_6   10    I/O     I
+(unused)              0       0     0   5     FB1_7         (b)     
+(unused)              0       0     0   5     FB1_8   11    I/O     
+(unused)              0       0     0   5     FB1_9   15    GCK/I/O GCK/I
+ROM_CS_n              1       0     0   4     FB1_10  18    I/O     O
+(unused)              0       0     0   5     FB1_11  16    GCK/I/O GCK
+(unused)              0       0     0   5     FB1_12  23    I/O     
+(unused)              0       0     0   5     FB1_13        (b)     
+i2c_select            1       0     0   4     FB1_14  17    GCK/I/O (b)
+RAM_CS_n              5       0     0   0     FB1_15  19    I/O     O
+dpuart_select         1       0     0   4     FB1_16        (b)     (b)
+dtack_n_armed         2       0     0   3     FB1_17  20    I/O     (b)
+any_select            3       0     0   2     FB1_18        (b)     (b)
+
+Signals Used by Logic in Function Block
+  1: A10                8: A17               15: A8 
+  2: A11                9: A18               16: A9 
+  3: A12               10: A19               17: AS_n 
+  4: A13               11: A20               18: DPUART_IRQ_n 
+  5: A14               12: A21               19: any_select 
+  6: A15               13: A22               20: dtack_n_armed 
+  7: A16               14: A23              
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+IPL0_n               .................X...................... 1
+ROM_CS_n             ......XXXXXXXX.......................... 8
+i2c_select           XXXXXXXXXXXXXXXX........................ 16
+RAM_CS_n             ......XXXXXXXX.......................... 8
+dpuart_select        XXXXXXXXXXXXXXXX........................ 16
+dtack_n_armed        ................X.XX.................... 3
+any_select           XXXXXXXXXXXXXX.X........................ 15
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*********************************** FB2  ***********************************
+Number of function block inputs used/remaining:               5/49
+Number of signals used by logic mapping into function block:  5
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+(unused)              0       0     0   5     FB2_1         (b)     
+RAM_LB_WE_n           1       0     0   4     FB2_2   60    I/O     O
+(unused)              0       0     0   5     FB2_3   58    I/O     I
+(unused)              0       0     0   5     FB2_4   59    I/O     I
+RAM_UB_OE_n           1       0     0   4     FB2_5   61    I/O     O
+(unused)              0       0     0   5     FB2_6   62    I/O     I
+(unused)              0       0     0   5     FB2_7         (b)     
+RAM_UB_WE_n           1       0     0   4     FB2_8   63    I/O     O
+(unused)              0       0     0   5     FB2_9   64    GSR/I/O 
+(unused)              0       0     0   5     FB2_10  1     I/O     I
+(unused)              0       0     0   5     FB2_11  2     GTS/I/O GTS
+ROM_LB_OE_n           1       0     0   4     FB2_12  4     I/O     O
+(unused)              0       0     0   5     FB2_13        (b)     
+(unused)              0       0     0   5     FB2_14  5     GTS/I/O I
+ROM_UB_OE_n           1       0     0   4     FB2_15  6     I/O     O
+(unused)              0       0     0   5     FB2_16        (b)     
+(unused)              0       0     0   5     FB2_17  7     I/O     
+(unused)              0       0     0   5     FB2_18        (b)     
+
+Signals Used by Logic in Function Block
+  1: LDS_n              3: ROM_CS_n           5: UDS_n 
+  2: RAM_CS_n           4: RW_n             
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+RAM_LB_WE_n          XX.X.................................... 3
+RAM_UB_OE_n          .X.XX................................... 3
+RAM_UB_WE_n          .X.XX................................... 3
+ROM_LB_OE_n          X.XX.................................... 3
+ROM_UB_OE_n          ..XXX................................... 3
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*********************************** FB3  ***********************************
+Number of function block inputs used/remaining:               2/52
+Number of signals used by logic mapping into function block:  2
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+(unused)              0       0     0   5     FB3_1         (b)     
+IPL2_n                0       0     0   5     FB3_2   22    I/O     O
+(unused)              0       0     0   5     FB3_3   31    I/O     
+(unused)              0       0     0   5     FB3_4   32    I/O     
+I2C_IACK_n            0       0     0   5     FB3_5   24    I/O     O
+DPUART_IACK_n         0       0     0   5     FB3_6   34    I/O     O
+(unused)              0       0     0   5     FB3_7         (b)     
+(unused)              0       0     0   5     FB3_8   25    I/O     
+BERR_n                0       0     0   5     FB3_9   27    I/O     O
+(unused)              0       0     0   5     FB3_10  39    I/O     I
+(unused)              0       0     0   5     FB3_11  33    I/O     
+IPL1_n                1       0     0   4     FB3_12  40    I/O     O
+(unused)              0       0     0   5     FB3_13        (b)     
+HALT_n                0       0     0   5     FB3_14  35    I/O     O
+(unused)              0       0     0   5     FB3_15  36    I/O     I
+(unused)              0       0     0   5     FB3_16  42    I/O     I
+(unused)              0       0     0   5     FB3_17  38    I/O     I
+(unused)              0       0     0   5     FB3_18        (b)     
+
+Signals Used by Logic in Function Block
+  1: I2C_IRQ_n          2: DPUART_IRQ_n     
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+IPL2_n               ........................................ 0
+I2C_IACK_n           ........................................ 0
+DPUART_IACK_n        ........................................ 0
+BERR_n               ........................................ 0
+IPL1_n               XX...................................... 2
+HALT_n               ........................................ 0
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*********************************** FB4  ***********************************
+Number of function block inputs used/remaining:               9/45
+Number of signals used by logic mapping into function block:  9
+Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
+Name                Pt      Pt    Pt  Pt               #    Type    Use
+(unused)              0       0     0   5     FB4_1         (b)     
+DTACK_n               2       0     0   3     FB4_2   43    I/O     O
+(unused)              0       0     0   5     FB4_3   46    I/O     I
+(unused)              0       0     0   5     FB4_4   47    I/O     I
+DPUART_CS_n           1       0     0   4     FB4_5   44    I/O     O
+(unused)              0       0     0   5     FB4_6   49    I/O     I
+(unused)              0       0     0   5     FB4_7         (b)     
+(unused)              0       0     0   5     FB4_8   45    I/O     I
+(unused)              0       0     0   5     FB4_9         (b)     
+I2C_CS_n              1       0     0   4     FB4_10  51    I/O     O
+(unused)              0       0     0   5     FB4_11  48    I/O     I
+(unused)              0       0     0   5     FB4_12  52    I/O     I
+(unused)              0       0     0   5     FB4_13        (b)     
+RAM_LB_OE_n           1       0     0   4     FB4_14  50    I/O     O
+(unused)              0       0     0   5     FB4_15  56    I/O     I
+(unused)              0       0     0   5     FB4_16        (b)     
+(unused)              0       0     0   5     FB4_17  57    I/O     I
+(unused)              0       0     0   5     FB4_18        (b)     
+
+Signals Used by Logic in Function Block
+  1: AS_n               4: RAM_CS_n           7: dpuart_select 
+  2: DTACK_n            5: RW_n               8: dtack_n_armed 
+  3: LDS_n              6: any_select         9: i2c_select 
+
+Signal                        1         2         3         4 FB
+Name                0----+----0----+----0----+----0----+----0 Inputs
+DTACK_n              XX...X.X................................ 4
+DPUART_CS_n          ..X...X................................. 2
+I2C_CS_n             ..X.....X............................... 2
+RAM_LB_OE_n          ..XXX................................... 3
+                    0----+----1----+----2----+----3----+----4
+                              0         0         0         0
+*******************************  Equations  ********************************
+
+********** Mapped Logic **********
+
+
+BERR_n <= '1';
+
+
+DPUART_CS_n <= NOT ((dpuart_select AND NOT LDS_n));
+
+
+DPUART_IACK_n <= '1';
+
+FDCPE_DTACK_n: FDCPE port map (DTACK_n,DTACK_n_D,NOT CLK,'0','0');
+DTACK_n_D <= ((NOT AS_n AND NOT DTACK_n)
+	OR (NOT AS_n AND dtack_n_armed AND any_select));
+
+
+HALT_n_I <= '0';
+HALT_n <= HALT_n_I when RES_n = '1' else 'Z';
+
+
+I2C_CS_n <= NOT ((i2c_select AND NOT LDS_n));
+
+
+I2C_IACK_n <= '1';
+
+
+IPL0_n <= DPUART_IRQ_n;
+
+
+IPL1_n <= (I2C_IRQ_n AND DPUART_IRQ_n);
+
+
+IPL2_n <= '1';
+
+FDCPE_RAM_CS_n: FDCPE port map (RAM_CS_n,RAM_CS_n_D,NOT AS_n,'0','0');
+RAM_CS_n_D <= ((NOT A22 AND NOT A21 AND A18 AND NOT A20 AND NOT A23)
+	OR (NOT A22 AND NOT A21 AND A17 AND NOT A20 AND NOT A23)
+	OR (NOT A22 AND NOT A21 AND NOT A20 AND A19 AND NOT A23)
+	OR (NOT A22 AND NOT A21 AND NOT A20 AND A16 AND NOT A23)
+	OR (NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND A20 AND NOT A19 AND NOT A16 AND 
+	NOT A23));
+
+
+RAM_LB_OE_n <= NOT ((RW_n AND NOT LDS_n AND NOT RAM_CS_n));
+
+
+RAM_LB_WE_n <= NOT ((NOT RW_n AND NOT LDS_n AND NOT RAM_CS_n));
+
+
+RAM_UB_OE_n <= NOT ((RW_n AND NOT RAM_CS_n AND NOT UDS_n));
+
+
+RAM_UB_WE_n <= NOT ((NOT RW_n AND NOT RAM_CS_n AND NOT UDS_n));
+
+FDCPE_ROM_CS_n: FDCPE port map (ROM_CS_n,ROM_CS_n_D,NOT AS_n,'0','0');
+ROM_CS_n_D <= (NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND NOT A20 AND NOT A19 AND NOT A16 AND 
+	NOT A23);
+
+
+ROM_LB_OE_n <= NOT ((RW_n AND NOT LDS_n AND NOT ROM_CS_n));
+
+
+ROM_UB_OE_n <= NOT ((RW_n AND NOT UDS_n AND NOT ROM_CS_n));
+
+FDCPE_any_select: FDCPE port map (any_select,any_select_D,NOT AS_n,'0','0');
+any_select_D <= ((NOT A22 AND NOT A21 AND NOT A20 AND NOT A23)
+	OR (NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND NOT A19 AND NOT A16 AND NOT A23)
+	OR (NOT A9 AND NOT A15 AND NOT A14 AND NOT A13 AND NOT A12 AND NOT A11 AND NOT A10 AND 
+	NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND NOT A19 AND NOT A23));
+
+FDCPE_dpuart_select: FDCPE port map (dpuart_select,dpuart_select_D,NOT AS_n,'0','0');
+dpuart_select_D <= (NOT A9 AND NOT A8 AND NOT A15 AND NOT A14 AND NOT A13 AND NOT A12 AND NOT A11 AND NOT A10 AND 
+	NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND A20 AND NOT A19 AND A16 AND NOT A23);
+
+FDCPE_dtack_n_armed: FDCPE port map (dtack_n_armed,dtack_n_armed_D,NOT CLK,'0','0');
+dtack_n_armed_D <= ((NOT AS_n AND dtack_n_armed)
+	OR (NOT AS_n AND any_select));
+
+FDCPE_i2c_select: FDCPE port map (i2c_select,i2c_select_D,NOT AS_n,'0','0');
+i2c_select_D <= (NOT A9 AND A8 AND NOT A15 AND NOT A14 AND NOT A13 AND NOT A12 AND NOT A11 AND NOT A10 AND 
+	NOT A22 AND NOT A21 AND NOT A18 AND NOT A17 AND A20 AND NOT A19 AND A16 AND NOT A23);
+
+Register Legend:
+ FDCPE (Q,D,C,CLR,PRE,CE); 
+ FTCPE (Q,D,C,CLR,PRE,CE); 
+ LDCP  (Q,D,G,CLR,PRE); 
+
+******************************  Device Pin Out *****************************
+
+Device : XC9572XL-10-VQ64
+
+
+   -----------------------------------------------  
+  /48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 \
+ | 49                                           32 | 
+ | 50                                           31 | 
+ | 51                                           30 | 
+ | 52                                           29 | 
+ | 53                                           28 | 
+ | 54                                           27 | 
+ | 55                                           26 | 
+ | 56              XC9572XL-10-VQ64             25 | 
+ | 57                                           24 | 
+ | 58                                           23 | 
+ | 59                                           22 | 
+ | 60                                           21 | 
+ | 61                                           20 | 
+ | 62                                           19 | 
+ | 63                                           18 | 
+ | 64                                           17 | 
+ \ 1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 /
+   -----------------------------------------------  
+
+
+Pin Signal                         Pin Signal                        
+No. Name                           No. Name                          
+  1 I2C_IRQ_n                        33 KPR                           
+  2 RES_n                            34 DPUART_IACK_n                 
+  3 VCC                              35 HALT_n                        
+  4 ROM_LB_OE_n                      36 A9                            
+  5 A15                              37 VCC                           
+  6 ROM_UB_OE_n                      38 A22                           
+  7 KPR                              39 A20                           
+  8 UDS_n                            40 IPL1_n                        
+  9 IPL0_n                           41 GND                           
+ 10 A16                              42 A17                           
+ 11 KPR                              43 DTACK_n                       
+ 12 A19                              44 DPUART_CS_n                   
+ 13 A21                              45 A12                           
+ 14 GND                              46 A11                           
+ 15 AS_n                             47 A23                           
+ 16 CLK                              48 RW_n                          
+ 17 KPR                              49 A18                           
+ 18 ROM_CS_n                         50 RAM_LB_OE_n                   
+ 19 RAM_CS_n                         51 I2C_CS_n                      
+ 20 KPR                              52 A14                           
+ 21 GND                              53 TDO                           
+ 22 IPL2_n                           54 GND                           
+ 23 KPR                              55 VCC                           
+ 24 I2C_IACK_n                       56 A13                           
+ 25 KPR                              57 A10                           
+ 26 VCC                              58 DPUART_IRQ_n                  
+ 27 BERR_n                           59 LDS_n                         
+ 28 TDI                              60 RAM_LB_WE_n                   
+ 29 TMS                              61 RAM_UB_OE_n                   
+ 30 TCK                              62 A8                            
+ 31 KPR                              63 RAM_UB_WE_n                   
+ 32 KPR                              64 KPR                           
+
+
+Legend :  NC  = Not Connected, unbonded pin
+         PGND = Unused I/O configured as additional Ground pin
+         TIE  = Unused I/O floating -- must tie to VCC, GND or other signal
+         KPR  = Unused I/O with weak keeper (leave unconnected)
+         VCC  = Dedicated Power Pin
+         GND  = Dedicated Ground Pin
+         TDI  = Test Data In, JTAG pin
+         TDO  = Test Data Out, JTAG pin
+         TCK  = Test Clock, JTAG pin
+         TMS  = Test Mode Select, JTAG pin
+  PROHIBITED  = User reserved pin
+****************************  Compiler Options  ****************************
+
+Following is a list of all global compiler options used by the fitter run.
+
+Device(s) Specified                         : xc9572xl-10-VQ64
+Optimization Method                         : SPEED
+Multi-Level Logic Optimization              : ON
+Ignore Timing Specifications                : OFF
+Default Register Power Up Value             : LOW
+Keep User Location Constraints              : ON
+What-You-See-Is-What-You-Get                : OFF
+Exhaustive Fitting                          : OFF
+Keep Unused Inputs                          : OFF
+Slew Rate                                   : FAST
+Power Mode                                  : STD
+Ground on Unused IOs                        : OFF
+Set I/O Pin Termination                     : KEEPER
+Global Clock Optimization                   : ON
+Global Set/Reset Optimization               : ON
+Global Ouput Enable Optimization            : ON
+Input Limit                                 : 54
+Pterm Limit                                 : 25
+</pre>
+<form><span class="pgRef"><table width="90%" align="center"><tr>
+<td align="left"><input type="button" onclick="javascript:parent.leftnav.showTop()" onmouseover="window.status='goto top of page'; return true;" onmouseout="window.status=''" value="back to top"></td>
+<td align="right"><input type="button" onclick="window.print()" onmouseover="window.status='print page'; return true;" onmouseout="window.status=''" value="print page"></td>
+</tr></table></span></form>
+</body></html>

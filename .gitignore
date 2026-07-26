@@ -1,0 +1,5 @@
+.vscode/
+
+firmware/build
+
+hardware/mc68k_sbc-backups
