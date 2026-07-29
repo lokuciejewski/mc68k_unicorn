@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+#include "../hal/inc/serial.h"
+
+static int uart_putchar(char c, [[maybe_unused]] FILE *stream) {
+  Serial_Putc(Serial_A, c);
+  return c;
+}
+
+static int uart_getchar([[maybe_unused]] FILE *stream) {
+  return Serial_Getc(Serial_A);
+}
+
+static FILE __stdio =
+    FDEV_SETUP_STREAM(uart_putchar, uart_getchar, NULL, _FDEV_SETUP_RW);
+
+FILE *const stdin __attribute__((used)) = &__stdio;
+FILE *const stdout __attribute__((used)) = &__stdio;
+FILE *const stderr __attribute__((used)) = &__stdio;

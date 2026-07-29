@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 4.4)
 
-# Use LLVM clang built for m68k
 set(CMAKE_C_COMPILER m68k-elf-gcc)
 set(CMAKE_CXX_COMPILER m68k-elf-g++)
 set(CMAKE_ASM_COMPILER m68k-elf-as)
 set(CMAKE_AR m68k-elf-ar)
 set(CMAKE_RANLIB m68k-elf-ranlib)
-# set(CMAKE_LINKER ${CMAKE_CURRENT_SOURCE_DIR}/llvm-project/build/bin/ld.lld)
 set(CMAKE_LINKER "m68k-elf-ld")
 
 project(unicorn_firmware C ASM)
@@ -28,6 +26,7 @@ set(LINKER_DEFINITIONS
 # Add C source files
 set(C_SOURCES
     bootloader.c
+    # syscalls.c
     hal/src/gpio.c
     hal/src/serial.c
     hal/src/duart.c
@@ -64,16 +63,16 @@ target_compile_options(unicorn_firmware.elf PRIVATE
     -m68010
     -msoft-float 
     -std=c23
-    -nostdlib
-    -nostartfiles
+    -specs=picolibc.specs
+    # -nostartfiles
     -ffreestanding
     -fno-builtin
     -fno-omit-frame-pointer
-    -O0
-    -ffunction-sections
-    -fdata-sections
+    -O1
+    # -ffunction-sections
+    # -fdata-sections
     -fno-delete-null-pointer-checks
-    -fverbose-asm
+    # -fverbose-asm
     -Wall
 )
 
@@ -87,19 +86,14 @@ include_directories(
 # Set the linker script + other ld flags
 target_link_options(unicorn_firmware.elf PRIVATE
     -m68010
+    -specs=picolibc.specs
+    -T${CMAKE_CURRENT_SOURCE_DIR}/picolibc_v1.ld
     -nostartfiles
-    -nostdlib
-    -fno-omit-frame-pointer
+    # -nostdlib
+    # -fno-omit-frame-pointer
     -Wl,--build-id=none
     -Wl,--print-memory-usage
-    -Wl,-T${CMAKE_CURRENT_SOURCE_DIR}/unicorn_v1.ld
     -Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/unicorn_firmware.map
-)
-
-# Define panic=abort for no_std
-target_compile_definitions(unicorn_firmware.elf PRIVATE
-    panic=abort
-    ${BOARD_DEFINITIONS}
 )
 
 # Convert ELF to binary 

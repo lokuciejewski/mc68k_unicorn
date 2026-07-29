@@ -1,7 +1,5 @@
-.section .vectors, "a"
+.section .text.init.enter, "a"
 .align 4
 
-.global _vectors
-_vectors:
-.long SV_STACK_TOP
+.long __stack
 .long _start

@@ -58,7 +58,7 @@ static void fill_instance_data(const Serial_Instance_e instance,
     data->rb = DUART_RBB;
     data->tb = DUART_TBB;
     data->rx_buffer = &rx_buffer_b;
-    data->rx_irq_mask = 0b00010000;
+    data->rx_irq_mask = 0b00100000;
     break;
   }
 }
@@ -92,14 +92,11 @@ void Serial_Init(const Serial_Settings_t *settings) {
   duart_write(inst.cr, 0b00110000); // Tx reset
   duart_write(inst.csr, settings->baudrate);
 
+  duart_write(inst.cr, 0b01010000); // Reset Break Change Interrupt
+  duart_write(inst.cr, 0b01000000); // Clear errors
+  duart_write(inst.cr, 0b00000101); // Enable Tx/Rx
+
   enable_interrupt(inst.rx_irq_mask); // Enable RxRDY interrupt
-
-  duart_write(inst.cr, 0b01000101); // Enable Tx/Rx, clear errors
-
-  // Empty FIFO
-  while (MEM(inst.sr) & 0x01) {
-    [[maybe_unused]] volatile char d = MEM(inst.rb);
-  }
 }
 
 void Serial_RxIrq(const Serial_Instance_e instance) {
