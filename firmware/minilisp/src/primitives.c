@@ -19,41 +19,12 @@ void define_constants(void *root, Obj **env) {
   add_variable(root, env, sym, &True);
 }
 
-void define_primitives(void *root, Obj **env) {
-  add_primitive(root, env, "quote", prim_quote);
-  add_primitive(root, env, "cons", prim_cons);
-  add_primitive(root, env, "car", prim_car);
-  add_primitive(root, env, "cdr", prim_cdr);
-  add_primitive(root, env, "setq", prim_setq);
-  add_primitive(root, env, "setcar", prim_setcar);
-  add_primitive(root, env, "while", prim_while);
-  add_primitive(root, env, "gensym", prim_gensym);
-  add_primitive(root, env, "+", prim_plus);
-  add_primitive(root, env, "-", prim_minus);
-  add_primitive(root, env, "*", prim_mult);
-  add_primitive(root, env, "<<", prim_shl);
-  add_primitive(root, env, ">>", prim_shr);
-  add_primitive(root, env, "<", prim_lt);
-  add_primitive(root, env, "define", prim_define);
-  add_primitive(root, env, "defun", prim_defun);
-  add_primitive(root, env, "defmacro", prim_defmacro);
-  add_primitive(root, env, "macroexpand", prim_macroexpand);
-  add_primitive(root, env, "lambda", prim_lambda);
-  add_primitive(root, env, "if", prim_if);
-  add_primitive(root, env, "=", prim_num_eq);
-  add_primitive(root, env, "eq", prim_eq);
-  add_primitive(root, env, "println", prim_println);
-  add_primitive(root, env, "rmem", prim_rmem);
-  add_primitive(root, env, "wmem", prim_wmem);
-  add_primitive(root, env, "hex", prim_hex);
-}
-
 //======================================================================
 // Primitive functions and special forms
 //======================================================================
 
 // 'expr
-Obj *prim_quote(void *root, Obj **env, Obj **list) {
+static Obj *prim_quote(void *root, Obj **env, Obj **list) {
   if (length(*list) != 1) {
     error("Malformed quote");
     return Nil;
@@ -62,7 +33,7 @@ Obj *prim_quote(void *root, Obj **env, Obj **list) {
 }
 
 // (cons expr expr)
-Obj *prim_cons(void *root, Obj **env, Obj **list) {
+static Obj *prim_cons(void *root, Obj **env, Obj **list) {
   if (length(*list) != 2) {
     error("Malformed cons");
     return Nil;
@@ -73,7 +44,7 @@ Obj *prim_cons(void *root, Obj **env, Obj **list) {
 }
 
 // (car <cell>)
-Obj *prim_car(void *root, Obj **env, Obj **list) {
+static Obj *prim_car(void *root, Obj **env, Obj **list) {
   Obj *args = eval_list(root, env, list);
   if (args->car->type != TCELL || args->cdr != Nil) {
     error("Malformed car");
@@ -83,7 +54,7 @@ Obj *prim_car(void *root, Obj **env, Obj **list) {
 }
 
 // (cdr <cell>)
-Obj *prim_cdr(void *root, Obj **env, Obj **list) {
+static Obj *prim_cdr(void *root, Obj **env, Obj **list) {
   Obj *args = eval_list(root, env, list);
   if (args->car->type != TCELL || args->cdr != Nil) {
     error("Malformed cdr");
@@ -93,7 +64,7 @@ Obj *prim_cdr(void *root, Obj **env, Obj **list) {
 }
 
 // (setq <symbol> expr)
-Obj *prim_setq(void *root, Obj **env, Obj **list) {
+static Obj *prim_setq(void *root, Obj **env, Obj **list) {
   if (length(*list) != 2 || (*list)->car->type != TSYMBOL) {
     error("Malformed setq");
     return Nil;
@@ -111,7 +82,7 @@ Obj *prim_setq(void *root, Obj **env, Obj **list) {
 }
 
 // (setcar <cell> expr)
-Obj *prim_setcar(void *root, Obj **env, Obj **list) {
+static Obj *prim_setcar(void *root, Obj **env, Obj **list) {
   DEFINE1(args);
   *args = eval_list(root, env, list);
   if (length(*args) != 2 || (*args)->car->type != TCELL) {
@@ -123,7 +94,7 @@ Obj *prim_setcar(void *root, Obj **env, Obj **list) {
 }
 
 // (while cond expr ...)
-Obj *prim_while(void *root, Obj **env, Obj **list) {
+static Obj *prim_while(void *root, Obj **env, Obj **list) {
   if (length(*list) < 2) {
     error("Malformed while");
     return Nil;
@@ -138,7 +109,7 @@ Obj *prim_while(void *root, Obj **env, Obj **list) {
 }
 
 // (gensym)
-Obj *prim_gensym(void *root, Obj **env, Obj **list) {
+static Obj *prim_gensym(void *root, Obj **env, Obj **list) {
   static int count = 0;
   char buf[10];
   snprintf(buf, sizeof(buf), "G__%d", count++);
@@ -146,7 +117,7 @@ Obj *prim_gensym(void *root, Obj **env, Obj **list) {
 }
 
 // (+ <integer> ...)
-Obj *prim_plus(void *root, Obj **env, Obj **list) {
+static Obj *prim_plus(void *root, Obj **env, Obj **list) {
   int sum = 0;
   for (Obj *args = eval_list(root, env, list); args != Nil; args = args->cdr) {
     if (args->car->type != TINT) {
@@ -159,7 +130,7 @@ Obj *prim_plus(void *root, Obj **env, Obj **list) {
 }
 
 // (- <integer> ...)
-Obj *prim_minus(void *root, Obj **env, Obj **list) {
+static Obj *prim_minus(void *root, Obj **env, Obj **list) {
   Obj *args = eval_list(root, env, list);
   for (Obj *p = args; p != Nil; p = p->cdr)
     if (p->car->type != TINT) {
@@ -175,7 +146,7 @@ Obj *prim_minus(void *root, Obj **env, Obj **list) {
 }
 
 // (* <integer> ...)
-Obj *prim_mult(void *root, Obj **env, Obj **list) {
+static Obj *prim_mult(void *root, Obj **env, Obj **list) {
   int mult = 1;
   for (Obj *args = eval_list(root, env, list); args != Nil; args = args->cdr) {
     if (args->car->type != TINT) {
@@ -188,7 +159,7 @@ Obj *prim_mult(void *root, Obj **env, Obj **list) {
 }
 
 // (<< <integer> <integer>)
-Obj *prim_shl(void *root, Obj **env, Obj **list) {
+static Obj *prim_shl(void *root, Obj **env, Obj **list) {
   Obj *args = eval_list(root, env, list);
   if (length(args) != 2) {
     error("malformed <<");
@@ -204,7 +175,7 @@ Obj *prim_shl(void *root, Obj **env, Obj **list) {
 }
 
 // (<< <integer> <integer>)
-Obj *prim_shr(void *root, Obj **env, Obj **list) {
+static Obj *prim_shr(void *root, Obj **env, Obj **list) {
   Obj *args = eval_list(root, env, list);
   if (length(args) != 2) {
     error("malformed >>");
@@ -220,7 +191,7 @@ Obj *prim_shr(void *root, Obj **env, Obj **list) {
 }
 
 // (< <integer> <integer>)
-Obj *prim_lt(void *root, Obj **env, Obj **list) {
+static Obj *prim_lt(void *root, Obj **env, Obj **list) {
   Obj *args = eval_list(root, env, list);
   if (length(args) != 2) {
     error("malformed <");
@@ -258,7 +229,7 @@ Obj *handle_function(void *root, Obj **env, Obj **list, int type) {
 }
 
 // (lambda (<symbol> ...) expr ...)
-Obj *prim_lambda(void *root, Obj **env, Obj **list) {
+static Obj *prim_lambda(void *root, Obj **env, Obj **list) {
   return handle_function(root, env, list, TFUNCTION);
 }
 
@@ -276,12 +247,12 @@ static Obj *handle_defun(void *root, Obj **env, Obj **list, int type) {
 }
 
 // (defun <symbol> (<symbol> ...) expr ...)
-Obj *prim_defun(void *root, Obj **env, Obj **list) {
+static Obj *prim_defun(void *root, Obj **env, Obj **list) {
   return handle_defun(root, env, list, TFUNCTION);
 }
 
 // (define <symbol> expr)
-Obj *prim_define(void *root, Obj **env, Obj **list) {
+static Obj *prim_define(void *root, Obj **env, Obj **list) {
   if (length(*list) != 2 || (*list)->car->type != TSYMBOL) {
     error("Malformed define");
     return Nil;
@@ -295,12 +266,12 @@ Obj *prim_define(void *root, Obj **env, Obj **list) {
 }
 
 // (defmacro <symbol> (<symbol> ...) expr ...)
-Obj *prim_defmacro(void *root, Obj **env, Obj **list) {
+static Obj *prim_defmacro(void *root, Obj **env, Obj **list) {
   return handle_defun(root, env, list, TMACRO);
 }
 
 // (macroexpand expr)
-Obj *prim_macroexpand(void *root, Obj **env, Obj **list) {
+static Obj *prim_macroexpand(void *root, Obj **env, Obj **list) {
   if (length(*list) != 1) {
     error("Malformed macroexpand");
     return Nil;
@@ -311,7 +282,7 @@ Obj *prim_macroexpand(void *root, Obj **env, Obj **list) {
 }
 
 // (println expr)
-Obj *prim_println(void *root, Obj **env, Obj **list) {
+static Obj *prim_println(void *root, Obj **env, Obj **list) {
   DEFINE1(tmp);
   *tmp = (*list)->car;
   print(eval(root, env, tmp));
@@ -320,7 +291,7 @@ Obj *prim_println(void *root, Obj **env, Obj **list) {
 }
 
 // (if expr expr expr ...)
-Obj *prim_if(void *root, Obj **env, Obj **list) {
+static Obj *prim_if(void *root, Obj **env, Obj **list) {
   if (length(*list) < 2) {
     error("Malformed if");
     return Nil;
@@ -337,7 +308,7 @@ Obj *prim_if(void *root, Obj **env, Obj **list) {
 }
 
 // (= <integer> <integer>)
-Obj *prim_num_eq(void *root, Obj **env, Obj **list) {
+static Obj *prim_num_eq(void *root, Obj **env, Obj **list) {
   if (length(*list) != 2) {
     error("Malformed =");
     return Nil;
@@ -353,7 +324,7 @@ Obj *prim_num_eq(void *root, Obj **env, Obj **list) {
 }
 
 // (eq expr expr)
-Obj *prim_eq(void *root, Obj **env, Obj **list) {
+static Obj *prim_eq(void *root, Obj **env, Obj **list) {
   if (length(*list) != 2) {
     error("Malformed eq");
     return Nil;
@@ -390,7 +361,7 @@ static void hexdump(uint32_t addr, uint32_t len) {
 }
 
 // (rmem <integer> <integer>)
-Obj *prim_rmem(void *root, Obj **env, Obj **list) {
+static Obj *prim_rmem(void *root, Obj **env, Obj **list) {
   if (length(*list) != 2) {
     error("Malformed rmem");
     return Nil;
@@ -407,7 +378,7 @@ Obj *prim_rmem(void *root, Obj **env, Obj **list) {
 }
 
 // (rmem <integer> <integer>)
-Obj *prim_wmem(void *root, Obj **env, Obj **list) {
+static Obj *prim_wmem(void *root, Obj **env, Obj **list) {
   if (length(*list) != 2) {
     error("Malformed wmem");
     return Nil;
@@ -447,7 +418,7 @@ Obj *prim_wmem(void *root, Obj **env, Obj **list) {
 }
 
 // (println expr)
-Obj *prim_hex(void *root, Obj **env, Obj **list) {
+static Obj *prim_hex(void *root, Obj **env, Obj **list) {
   DEFINE3(tmp, evald, res_int);
   *tmp = (*list)->car;
   char *end;
@@ -460,4 +431,33 @@ Obj *prim_hex(void *root, Obj **env, Obj **list) {
     return Nil;
   }
   return *res_int;
+}
+
+void define_primitives(void *root, Obj **env) {
+  add_primitive(root, env, "quote", prim_quote);
+  add_primitive(root, env, "cons", prim_cons);
+  add_primitive(root, env, "car", prim_car);
+  add_primitive(root, env, "cdr", prim_cdr);
+  add_primitive(root, env, "setq", prim_setq);
+  add_primitive(root, env, "setcar", prim_setcar);
+  add_primitive(root, env, "while", prim_while);
+  add_primitive(root, env, "gensym", prim_gensym);
+  add_primitive(root, env, "+", prim_plus);
+  add_primitive(root, env, "-", prim_minus);
+  add_primitive(root, env, "*", prim_mult);
+  add_primitive(root, env, "<<", prim_shl);
+  add_primitive(root, env, ">>", prim_shr);
+  add_primitive(root, env, "<", prim_lt);
+  add_primitive(root, env, "define", prim_define);
+  add_primitive(root, env, "defun", prim_defun);
+  add_primitive(root, env, "defmacro", prim_defmacro);
+  add_primitive(root, env, "macroexpand", prim_macroexpand);
+  add_primitive(root, env, "lambda", prim_lambda);
+  add_primitive(root, env, "if", prim_if);
+  add_primitive(root, env, "=", prim_num_eq);
+  add_primitive(root, env, "eq", prim_eq);
+  add_primitive(root, env, "println", prim_println);
+  add_primitive(root, env, "rmem", prim_rmem);
+  add_primitive(root, env, "wmem", prim_wmem);
+  add_primitive(root, env, "hex", prim_hex);
 }

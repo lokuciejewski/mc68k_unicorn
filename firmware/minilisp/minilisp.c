@@ -31,12 +31,6 @@ Obj *Symbols;
 // Entry point
 //======================================================================
 
-// Returns true if the environment variable is defined and not the empty string.
-static bool getEnvFlag(char *name) {
-  char *val = getenv(name);
-  return val && val[0];
-}
-
 int minilisp(int argc, char **argv) {
   init_memory();
 
