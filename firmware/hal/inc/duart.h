@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../inc/irq.h"
+#include "irq.h"
 
 #define DUART_BASE 0x110000
 

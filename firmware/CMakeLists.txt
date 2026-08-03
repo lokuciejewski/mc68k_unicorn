@@ -26,7 +26,7 @@ set(LINKER_DEFINITIONS
 # Add C source files
 set(C_SOURCES
     bootloader.c
-    # syscalls.c
+    syscalls.c
     hal/src/gpio.c
     hal/src/serial.c
     hal/src/duart.c
@@ -52,13 +52,12 @@ add_custom_command(
 # Create the bootloader executable
 add_executable(unicorn_firmware.elf ${C_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/asm_sources.o)
 
-# Add ushell subdirectory to build the library
-add_subdirectory(ushell)
+# Add minilisp subdirectory to build the object library
+add_subdirectory(minilisp)
 
-# Link the ushell library
-target_link_libraries(unicorn_firmware.elf PRIVATE ushell)
+# Link the minilisp object library
+target_link_libraries(unicorn_firmware.elf PRIVATE minilisp)
 
-# Panic configuration for no_std
 target_compile_options(unicorn_firmware.elf PRIVATE
     -m68010
     -msoft-float 
@@ -80,7 +79,7 @@ target_compile_options(unicorn_firmware.elf PRIVATE
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/hal/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/ushell/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/minilisp/inc
 )
 
 # Set the linker script + other ld flags

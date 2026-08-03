@@ -1,6 +1,4 @@
 #include "../inc/duart.h"
-#include "../inc/gpio.h"
-#include "../inc/irq.h"
 #include "../inc/memory.h"
 #include "../inc/serial.h"
 

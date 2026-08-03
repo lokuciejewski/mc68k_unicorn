@@ -17,3 +17,18 @@ static FILE __stdio =
 FILE *const stdin __attribute__((used)) = &__stdio;
 FILE *const stdout __attribute__((used)) = &__stdio;
 FILE *const stderr __attribute__((used)) = &__stdio;
+FILE *const __iob[3] = {&__stdio, &__stdio, &__stdio};
+
+int __attribute((noreturn)) _exit(int status) {
+  printf("exit status %d\r\n", status);
+  __asm__ volatile(
+      "move.w #0x2700, %%sr\n\t"     // supervisor mode, interrupts disabled
+      "movea.l 0x00000000, %%sp\n\t" // load initial SSP from reset vector
+      "movea.l 0x00000004, %%a0\n\t" // load initial PC
+      "jmp (%%a0)"                   // jump to reset entry point
+      :
+      :
+      : "a0", "cc", "memory");
+
+  while(1) {}
+}
