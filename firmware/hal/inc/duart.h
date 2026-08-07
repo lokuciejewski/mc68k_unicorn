@@ -1,6 +1,7 @@
 #pragma once
 
 #include "irq.h"
+#include <stdint.h>
 
 #define DUART_BASE 0x110000
 
@@ -29,6 +30,10 @@
 #define DUART_IP (DUART_BASE + 0x1B)
 #define DUART_OPCR (DUART_BASE + 0x1B)
 #define DUART_OPR_SET (DUART_BASE + 0x1D)
+#define DUART_START_CNT (DUART_BASE + 0x1D)
 #define DUART_OPR_RESET (DUART_BASE + 0x1F)
+#define DUART_STOP_CNT (DUART_BASE + 0x1F)
 
-void INTERRUPT DUART_Irq();
+void INTERRUPT DUART_Irq(void);
+void DUART_EnableIrq(uint8_t mask);
+void DUART_DisableIrq(uint8_t mask);

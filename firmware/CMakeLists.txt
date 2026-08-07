@@ -15,22 +15,25 @@ set(CMAKE_SYSTEM_PROCESSOR m68k)
 
 # Board configuration definitions
 set(BOARD_DEFINITIONS
-    CLOCK_SPEED_HZ=8192000U
+    CLOCK_SPEED_HZ=8192000UL
 )
 
 # Linker definitions (expanded for ld)
 set(LINKER_DEFINITIONS
-    -DCLOCK_SPEED_HZ=8192000U
+    -DCLOCK_SPEED_HZ=8192000UL
 )
 
 # Add C source files
 set(C_SOURCES
     bootloader.c
     syscalls.c
+    tinylisp.c
     hal/src/gpio.c
     hal/src/serial.c
     hal/src/duart.c
     hal/src/irq.c
+    hal/src/spi.c
+    hal/src/time.c
 )
 
 # Add ASM source files
@@ -45,18 +48,12 @@ add_custom_command(
     DEPENDS ${ASM_SOURCES}
 )
 
-# set(CMAKE_C_LINK_EXECUTABLE 
-#     "${CMAKE_CURRENT_SOURCE_DIR}/m68k-ld-wrapper <LINK_FLAGS> <OBJECTS> -o <TARGET>"
-# )
-
 # Create the bootloader executable
 add_executable(unicorn_firmware.elf ${C_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/asm_sources.o)
 
-# Add minilisp subdirectory to build the object library
-add_subdirectory(minilisp)
-
-# Link the minilisp object library
-target_link_libraries(unicorn_firmware.elf PRIVATE minilisp)
+target_compile_definitions(unicorn_firmware.elf PRIVATE
+    ${BOARD_DEFINITIONS}
+)
 
 target_compile_options(unicorn_firmware.elf PRIVATE
     -m68010

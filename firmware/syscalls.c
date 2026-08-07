@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "../hal/inc/serial.h"
+#include "hal/inc/serial.h"
 
 static int uart_putchar(char c, [[maybe_unused]] FILE *stream) {
   Serial_Putc(Serial_A, c);

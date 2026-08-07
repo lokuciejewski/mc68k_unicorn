@@ -15,16 +15,6 @@ typedef struct {
 
 static Serial_RxBuffer_t rx_buffer_a = {0};
 static Serial_RxBuffer_t rx_buffer_b = {0};
-static uint8_t interrupt_register = 0;
-
-/**
- * Used to avoid clbr since on 68010 it performs implicit read which messes up
- * with the baudrate scaling
- */
-static inline void __attribute__((always_inline)) duart_write(uint32_t addr,
-                                                              uint8_t val) {
-  __asm__ volatile("move.b %0, (%1)" : : "d"(val), "a"(addr) : "memory");
-}
 
 typedef struct {
   uint32_t cr;
@@ -63,16 +53,6 @@ static void fill_instance_data(const Serial_Instance_e instance,
   }
 }
 
-static inline void enable_interrupt(uint8_t irq_mask) {
-  interrupt_register |= irq_mask;
-  duart_write(DUART_IMR, interrupt_register);
-}
-
-static inline void disable_interrupt(uint8_t irq_mask) {
-  interrupt_register &= ~irq_mask;
-  duart_write(DUART_IMR, interrupt_register);
-}
-
 void Serial_Init(const Serial_Settings_t *settings) {
   duart_write(DUART_IMR, 0x00); // Mask all interrupts
   Serial_InstanceData_t inst = {0};
@@ -96,7 +76,7 @@ void Serial_Init(const Serial_Settings_t *settings) {
   duart_write(inst.cr, 0b01000000); // Clear errors
   duart_write(inst.cr, 0b00000101); // Enable Tx/Rx
 
-  enable_interrupt(inst.rx_irq_mask); // Enable RxRDY interrupt
+  DUART_EnableIrq(inst.rx_irq_mask); // Enable RxRDY interrupt
 }
 
 void Serial_RxIrq(const Serial_Instance_e instance) {

@@ -1,8 +1,10 @@
 #include "hal/inc/gpio.h"
 #include "hal/inc/irq.h"
 #include "hal/inc/serial.h"
+#include "hal/inc/spi.h"
+#include "hal/inc/time.h"
 
-extern int minilisp();
+extern int tinylisp();
 
 int main();
 
@@ -50,16 +52,18 @@ void _start(void) {
                                 .cts = false};
   Serial_Init(&settings);
   GPIO_Init();
-  GPIO_Led_Set(Led_1, true);
+  GPIO_Led_Set(Led_1, false);
+  GPIO_Led_Set(Led_2, false);
+  GPIO_Led_Set(Led_3, false);
+  Time_Init();
+  SPI_Init();
   Irq_SetInterrupts(true);
-  GPIO_Led_Set(Led_2, true);
   main();
 }
 
 int main() {
   enter_user_mode();
-  GPIO_Led_Set(Led_3, true);
   Serial_PrintStr(Serial_A, "\r\nUnicorn SBC v1\r\n");
 
-  return minilisp();
+  return tinylisp();
 }
