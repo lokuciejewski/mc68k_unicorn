@@ -34,6 +34,8 @@ set(C_SOURCES
     hal/src/irq.c
     hal/src/spi.c
     hal/src/time.c
+
+    middleware/sd_card.c
 )
 
 # Add ASM source files
@@ -76,7 +78,7 @@ target_compile_options(unicorn_firmware.elf PRIVATE
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/hal/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/minilisp/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/middleware/api
 )
 
 # Set the linker script + other ld flags

@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "hal/inc/memory.h"
 #include "hal/inc/spi.h"
 #include "hal/inc/time.h"
+#include "middleware/api/sd_card.h"
 #include <math.h> /* to return NAN from num() */
 #include <setjmp.h>
 #include <stdint.h>
@@ -407,24 +408,83 @@ L f_delay_ms(L t, L *e) {
   delay_ms(x);
   return nil;
 }
+
+L f_sd_init(L t, L *e) { return num(SD_Init()); }
+
+L f_sd_type(L t, L *e) { return num(SD_Type()); }
+
+static void blockdump(uint8_t *buffer, uint32_t len) {
+  printf("\r\n");
+  char ascii[17];
+  ascii[16] = '\0';
+
+  for (uint16_t i = 0; i < len; i++) {
+    if (i % 16 == 0) {
+      if (i != 0)
+        printf(" |%s|\n", ascii);
+      printf("0x%04x: ", i);
+    }
+
+    uint8_t b = buffer[i];
+    printf("%02x ", b);
+
+    ascii[i % 16] = (b >= 32 && b < 127) ? b : '.';
+
+    if (i + 1 == len) {
+      for (uint32_t j = (i % 16) + 1; j < 16; j++) {
+        printf("   ");
+        ascii[j] = ' ';
+      }
+      printf(" |%s|\n", ascii);
+    }
+  }
+}
+
+L f_sd_read(L t, L *e) {
+  I a = 0;
+  L x = evarg(&t, e, &a);
+  gc(x);
+  uint8_t buffer[513] = {0};
+  SD_RetCode_e ret = SD_ReadBlock(x, buffer);
+  blockdump(buffer, 512);
+  return num(ret);
+}
+
 struct {
   const char *s;
   L (*f)(L, L *);
   short t;
-} prim[] = {{"eval", f_eval, 0},      {"quote", f_quote, 0},
-            {"cons", f_cons, 0},      {"car", f_car, 0},
-            {"cdr", f_cdr, 0},        {"+", f_add, 0},
-            {"-", f_sub, 0},          {"*", f_mul, 0},
-            {"/", f_div, 0},          {"<<", f_lsh, 0},
-            {"int", f_int, 0},        {"<", f_lt, 0},
-            {"eq?", f_eq, 0},         {"or", f_or, 0},
-            {"and", f_and, 0},        {"not", f_not, 0},
-            {"cond", f_cond, 1},      {"if", f_if, 1},
-            {"let*", f_leta, 1},      {"lambda", f_lambda, 0},
-            {"define", f_define, 0},  {"pair?", f_pair, 0},
-            {"rmem", f_rmem, 0},      {"wmem", f_wmem, 0},
-            {"rspi", f_spi_r, 0},     {"wspi", f_spi_w, 0},
-            {"delay", f_delay_ms, 0}, {0}};
+} prim[] = {{"eval", f_eval, 0},
+            {"quote", f_quote, 0},
+            {"cons", f_cons, 0},
+            {"car", f_car, 0},
+            {"cdr", f_cdr, 0},
+            {"+", f_add, 0},
+            {"-", f_sub, 0},
+            {"*", f_mul, 0},
+            {"/", f_div, 0},
+            {"<<", f_lsh, 0},
+            {"int", f_int, 0},
+            {"<", f_lt, 0},
+            {"eq?", f_eq, 0},
+            {"or", f_or, 0},
+            {"and", f_and, 0},
+            {"not", f_not, 0},
+            {"cond", f_cond, 1},
+            {"if", f_if, 1},
+            {"let*", f_leta, 1},
+            {"lambda", f_lambda, 0},
+            {"define", f_define, 0},
+            {"pair?", f_pair, 0},
+            {"rmem", f_rmem, 0},
+            {"wmem", f_wmem, 0},
+            {"rspi", f_spi_r, 0},
+            {"wspi", f_spi_w, 0},
+            {"sd_init", f_sd_init, 0},
+            {"sd_type", f_sd_type, 0},
+            {"sd_read", f_sd_read, 0},
+            {"delay", f_delay_ms, 0},
+            {0}};
 
 L eval(L x, L e) {
   I a;

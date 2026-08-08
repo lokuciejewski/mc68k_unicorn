@@ -30,20 +30,21 @@ static inline void mosi(uint8_t state) {
 }
 
 static inline uint8_t miso(void) {
-  return (uint8_t)(MEM(DUART_IP & MISO) != 0);
+  return (uint8_t)((MEM(DUART_IP) & MISO) != 0);
 }
 
 void SPI_Init(void) {
-  //
+  clk(1);
+  mosi(1);
+  deselect();
 }
 
-uint8_t SPI_WriteByte(uint8_t byte) {
+uint8_t SPI_WriteByteNoSel(uint8_t byte) {
   uint8_t read_byte = 0;
-  select();
   clk(0);
 
-  for (uint8_t i = 0; i < 8; i++) {
-    mosi((byte >> i) & 0b1);
+  for (int8_t i = 7; i >= 0; i--) { // SPI should be MSB first
+    mosi((byte >> i) & 1);
     clk(1);
     if (miso()) {
       read_byte |= (1 << i);
@@ -52,9 +53,24 @@ uint8_t SPI_WriteByte(uint8_t byte) {
     clk(0);
     delay_2us();
   }
+  return read_byte;
+}
 
+uint8_t SPI_WriteByte(uint8_t byte) {
+  select();
+  uint8_t read_byte = SPI_WriteByteNoSel(byte);
   deselect();
   return read_byte;
 }
 
+uint8_t SPI_ReadByteNoSel(void) { return SPI_WriteByteNoSel(0); }
+
 uint8_t SPI_ReadByte(void) { return SPI_WriteByte(0); }
+
+void SPI_Select(bool state) {
+  if (state) {
+    select();
+  } else {
+    deselect();
+  }
+}
