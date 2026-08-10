@@ -39,9 +39,18 @@
 // CMD17 - READ_SINGLE_BLOCK
 #define CMD17 17
 #define CMD17_CRC 0
+
+// CMD24 - WRITE_SINGLE_BLOCK
+#define CMD24 24
+#define CMD24_CRC 0
+
 // 100ms timeout while clocking is needed. It takes around 320us for a single
 // byte to be sent/read. 100ms is 312.5*320us so to make it safer:
 #define SD_MAX_READ_ATTEMPTS 320U
+// 250ms timeout while clocking is needed. Using same math as for read, it
+// needs 2.5 * 320 attempts, so:
+#define SD_MAX_WRITE_ATTEMPTS 800U
+
 #define SD_START_BLOCK 0xfe
 #define SD_BLOCK_SIZE 512U
 
@@ -220,6 +229,18 @@ SD_RetCode_e SD_Init(void) {
 
 SD_CardType_e SD_Type(void) { return card_type; }
 
+// `ops` should be `SD_MAX_READ_ATTEMPTS` or `SD_MAX_WRITE_ATTEMPTS`
+static uint8_t SD_WaitForReady(uint16_t ops) {
+  uint8_t read = 0xff;
+  for (uint16_t i = 0; i < ops; i++) {
+    read = SD_ReadByte();
+    if (read != 0xff) {
+      return read;
+    }
+  }
+  return 0xff;
+}
+
 SD_RetCode_e SD_ReadBlock(uint32_t block_num, uint8_t *buffer) {
   uint8_t sd_response = 0xff;
 
@@ -231,26 +252,68 @@ SD_RetCode_e SD_ReadBlock(uint32_t block_num, uint8_t *buffer) {
   SD_SendCommand(CMD17, block_num, CMD17_CRC);
   SD_ReadResponse(SD_Response1, &sd_response);
   if (sd_response != 0xff) {
-    uint8_t read = 0xff;
+
     // Wait up to 100ms for the "Start Block" response
-    for (uint16_t i = 0; i < SD_MAX_READ_ATTEMPTS; i++) {
-      read = SD_ReadByte();
-      if (read != 0xff) {
-        break;
-      }
-    }
+    uint8_t read = SD_WaitForReady(SD_MAX_READ_ATTEMPTS);
 
     if (read == SD_START_BLOCK) {
       for (uint16_t i = 0; i < SD_BLOCK_SIZE; i++) {
         buffer[i] = SD_ReadByte();
       }
-      buffer[SD_BLOCK_SIZE + 1] = 0;
 
       SD_ReadByte();
       SD_ReadByte(); // Read 16-bit CRC
+    } else {
+      sd_response = SD_GENERAL_ERROR;
     }
   }
 
   SD_Deselect();
-  return sd_response;
+  return (SD_RetCode_e)sd_response;
+}
+
+SD_RetCode_e SD_WriteBlock(uint32_t block_num, const uint8_t *buffer) {
+  uint8_t sd_response = 0xff;
+
+  if (card_type == SD_V1_SDSC) {
+    block_num *= 512; // SDSC is byte-addressed, the rest are block-addressed
+  }
+
+  SD_Select();
+  SD_SendCommand(CMD24, block_num, CMD24_CRC);
+  SD_ReadResponse(SD_Response1, &sd_response);
+  if (sd_response == 0) {
+    SD_WriteByte(SD_START_BLOCK);
+
+    for (uint16_t i = 0; i < SD_BLOCK_SIZE; i++) {
+      SD_WriteByte(buffer[i]);
+    }
+
+    // Dummy CRC
+    SD_WriteByte(0xff);
+    SD_WriteByte(0xff);
+
+    uint8_t data_resp = SD_WaitForReady(SD_MAX_WRITE_ATTEMPTS);
+
+    if ((data_resp & 0x1F) != 0x05) {
+      SD_Deselect();
+      return SD_GENERAL_ERROR;
+    }
+
+    SD_Deselect();
+    return SD_OK;
+  }
+  SD_Deselect();
+  return SD_GENERAL_ERROR;
+}
+
+SD_RetCode_e SD_Sync(void) {
+  SD_Select();
+  uint8_t data_resp = SD_WaitForReady(SD_MAX_WRITE_ATTEMPTS);
+  if (data_resp != 0xff) {
+    SD_Deselect();
+    return SD_OK;
+  }
+  SD_Deselect();
+  return SD_GENERAL_ERROR;
 }

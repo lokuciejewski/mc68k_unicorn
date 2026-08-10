@@ -22,5 +22,10 @@ SD_RetCode_e SD_Init(void);
 
 SD_CardType_e SD_Type(void);
 
-// Supplied buffer MUST be 513 bytes long (512 data + 1 for null)
+// Supplied buffer MUST be 512 bytes long
 SD_RetCode_e SD_ReadBlock(uint32_t block_num, uint8_t *buffer);
+
+// Write the buffer (MUST be 512 bytes long)
+SD_RetCode_e SD_WriteBlock(uint32_t block_num, const uint8_t *buffer);
+
+SD_RetCode_e SD_Sync(void);

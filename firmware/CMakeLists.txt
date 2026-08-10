@@ -36,6 +36,10 @@ set(C_SOURCES
     hal/src/time.c
 
     middleware/sd_card.c
+    middleware/ff.c
+    middleware/ffsystem.c
+    middleware/ffunicode.c
+    middleware/diskio.c
 )
 
 # Add ASM source files
