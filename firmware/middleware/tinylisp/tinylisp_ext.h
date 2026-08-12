@@ -4,9 +4,9 @@
 // array to use the functions in this file
 #pragma once
 
-#include "hal/inc/memory.h"
-#include "hal/inc/time.h"
-#include "middleware/api/ff.h"
+#include "../../hal/inc/memory.h"
+#include "../../hal/inc/time.h"
+#include "../fatfs/api/ff.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>

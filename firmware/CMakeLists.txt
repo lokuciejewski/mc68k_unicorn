@@ -27,7 +27,6 @@ set(LINKER_DEFINITIONS
 set(C_SOURCES
     bootloader.c
     syscalls.c
-    tinylisp.c
     hal/src/gpio.c
     hal/src/serial.c
     hal/src/duart.c
@@ -35,11 +34,13 @@ set(C_SOURCES
     hal/src/spi.c
     hal/src/time.c
 
-    middleware/sd_card.c
-    middleware/ff.c
-    middleware/ffsystem.c
-    middleware/ffunicode.c
-    middleware/diskio.c
+    drivers/sd_card/sd_card.c
+
+    middleware/tinylisp/tinylisp.c
+    middleware/fatfs/ff.c
+    middleware/fatfs/ffsystem.c
+    middleware/fatfs/ffunicode.c
+    middleware/fatfs/diskio.c
 )
 
 # Add ASM source files
@@ -82,7 +83,9 @@ target_compile_options(unicorn_firmware.elf PRIVATE
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/hal/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/middleware/api
+    ${CMAKE_CURRENT_SOURCE_DIR}/drivers/sd_card/api
+    ${CMAKE_CURRENT_SOURCE_DIR}/middleware/fatfs/api
+    ${CMAKE_CURRENT_SOURCE_DIR}/middleware/tinylisp
 )
 
 # Set the linker script + other ld flags

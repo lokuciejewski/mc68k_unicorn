@@ -8,9 +8,10 @@
 /*-----------------------------------------------------------------------*/
 
 #include "api/diskio.h" /* Declarations FatFs MAI */
-#include "api/ff.h"     /* Basic definitions of FatFs */
-#include "api/sd_card.h"
+#include "../../drivers/sd_card/api/sd_card.h"
+#include "api/ff.h" /* Basic definitions of FatFs */
 #include <stdbool.h>
+
 
 typedef enum {
   SD_Card,

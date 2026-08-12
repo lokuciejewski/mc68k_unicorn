@@ -1,7 +1,7 @@
 #include "api/sd_card.h"
-#include "../hal/inc/gpio.h"
-#include "../hal/inc/spi.h"
-#include "../hal/inc/time.h"
+#include "../../hal/inc/gpio.h"
+#include "../../hal/inc/spi.h"
+#include "../../hal/inc/time.h"
 #include <stdbool.h>
 #include <string.h>
 
