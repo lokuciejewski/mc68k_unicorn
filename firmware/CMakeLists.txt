@@ -32,6 +32,7 @@ set(C_SOURCES
     hal/src/duart.c
     hal/src/irq.c
     hal/src/spi.c
+    hal/src/i2c.c
     hal/src/time.c
 
     drivers/sd_card/sd_card.c

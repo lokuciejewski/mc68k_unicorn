@@ -3,6 +3,8 @@
 #include "hal/inc/serial.h"
 #include "hal/inc/spi.h"
 #include "hal/inc/time.h"
+#include "result_codes.h"
+#include <stdio.h>
 
 extern int tinylisp();
 
@@ -43,14 +45,22 @@ void _start(void) {
   }
 
   Irq_Init();
-  Serial_Settings_t settings = {.instance = Serial_A,
-                                .baudrate = Serial_Baudrate_19200,
-                                .bit_conf = Serial_8n,
-                                .stop_bits = Serial_StopBits1,
-                                .rx_rts = false,
-                                .tx_rts = false,
-                                .cts = false};
-  Serial_Init(&settings);
+  Serial_Settings_t settings_a = {.instance = Serial_A,
+                                  .baudrate = Serial_Baudrate_19200,
+                                  .bit_conf = Serial_8n,
+                                  .stop_bits = Serial_StopBits1,
+                                  .rx_rts = false,
+                                  .tx_rts = false,
+                                  .cts = false};
+  Serial_Init(&settings_a);
+  Serial_Settings_t settings_b = {.instance = Serial_B,
+                                  .baudrate = Serial_Baudrate_300,
+                                  .bit_conf = Serial_7e,
+                                  .stop_bits = Serial_StopBits1,
+                                  .rx_rts = true,
+                                  .tx_rts = true,
+                                  .cts = true};
+  Serial_Init(&settings_b);
   GPIO_Init();
   GPIO_Led_Set(Led_1, false);
   GPIO_Led_Set(Led_2, false);
@@ -63,7 +73,6 @@ void _start(void) {
 
 int main() {
   enter_user_mode();
-  Serial_PrintStr(Serial_A, "\r\nUnicorn SBC v1\r\n");
-
+  printf("\r\nUnicorn SBC v1\r\n");
   return tinylisp();
 }

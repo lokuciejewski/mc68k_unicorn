@@ -2,14 +2,18 @@
 
 #include "hal/inc/serial.h"
 
+static volatile Serial_Instance_e current_instance = Serial_A;
+
 static int uart_putchar(char c, [[maybe_unused]] FILE *stream) {
-  Serial_Putc(Serial_A, c);
+  Serial_Putc(current_instance, c);
   return c;
 }
 
 static int uart_getchar([[maybe_unused]] FILE *stream) {
-  return Serial_Getc(Serial_A);
+  return Serial_Getc(current_instance);
 }
+
+void Serial_SetStdio(Serial_Instance_e serial) { current_instance = serial; }
 
 static FILE __stdio =
     FDEV_SETUP_STREAM(uart_putchar, uart_getchar, NULL, _FDEV_SETUP_RW);
@@ -30,5 +34,6 @@ int __attribute((noreturn)) _exit(int status) {
       :
       : "a0", "cc", "memory");
 
-  while(1) {}
+  while (1) {
+  }
 }

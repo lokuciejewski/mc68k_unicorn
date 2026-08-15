@@ -1,8 +1,11 @@
 #include "../inc/serial.h"
 #include "../inc/duart.h"
 #include "../inc/memory.h"
+#include "../inc/time.h"
 
 #include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
 
 #define RX_BUFFER_SIZE 256U
 #define INVALID_INSTANCE "Invalid serial instance"
@@ -107,15 +110,34 @@ void Serial_Putc(const Serial_Instance_e instance, char c) {
   MEM(inst.tb) = c;
 }
 
+static inline char get_char_from_buffer(const Serial_InstanceData_t *inst) {
+  char c = inst->rx_buffer->rx_buffer[inst->rx_buffer->rx_tail];
+  (inst->rx_buffer->rx_tail)++; // wrap on overflow
+  return c;
+}
+
 char Serial_Getc(const Serial_Instance_e instance) {
   Serial_InstanceData_t inst = {0};
   fill_instance_data(instance, &inst);
   while (inst.rx_buffer->rx_head == inst.rx_buffer->rx_tail) {
     // Wait for incoming byte
   }
-  char c = inst.rx_buffer->rx_buffer[inst.rx_buffer->rx_tail];
-  (inst.rx_buffer->rx_tail)++; // wrap on overflow
-  return c;
+  return get_char_from_buffer(&inst);
+}
+
+UnicornResult_e Serial_GetcT(const Serial_Instance_e instance,
+                             uint16_t timeout_ms, char *out) {
+  Serial_InstanceData_t inst = {0};
+  fill_instance_data(instance, &inst);
+  for (uint16_t i = 0; i < timeout_ms; i++) {
+    if (inst.rx_buffer->rx_head == inst.rx_buffer->rx_tail) {
+      *out = get_char_from_buffer(&inst);
+      return UniRes_Ok;
+    }
+    delay_ms(1);
+  }
+  *out = EOF;
+  return UniRes_Timeout;
 }
 
 void Serial_PrintStr(const Serial_Instance_e instance, const char *str) {
