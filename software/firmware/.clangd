@@ -1,0 +1,8 @@
+CompileFlags:
+  Compiler: m68k-elf-gcc
+  CompilationDatabase: build
+  BuiltinHeaders: QueryDriver 
+
+  Add:
+    - --target=m68k
+    - -Wno-unknown-attributes     # to suppress the warning about INTERRUPT 
