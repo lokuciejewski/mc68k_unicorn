@@ -2,6 +2,7 @@
 
 #include "../../system/result_codes.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 typedef enum {
@@ -55,3 +56,11 @@ UnicornResult_e Serial_GetcT(const Serial_Instance_e instance,
 
 /// Print a null-terminated string to the specified serial port
 void Serial_PrintStr(const Serial_Instance_e instance, const char *str);
+
+/// Write `count` bytes to serial from `buf`
+size_t Serial_WriteBytes(const Serial_Instance_e instance, const uint8_t *buf,
+                       size_t count);
+
+/// Read `count` bytes from serial to `buf`
+size_t Serial_ReadBytes(const Serial_Instance_e instance, uint8_t *buf,
+                      size_t count);

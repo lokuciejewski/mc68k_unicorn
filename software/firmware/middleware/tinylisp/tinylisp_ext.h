@@ -7,9 +7,11 @@
 #include "../../hal/inc/memory.h"
 #include "../../hal/inc/time.h"
 #include "../fatfs/api/ff.h"
+#include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #ifndef I
 #define I unsigned
@@ -101,8 +103,9 @@ L f_delay_ms(L t, L *e) {
 }
 
 static FATFS sd_card;
-static FIL file;
-L f_fs_mount(L t, L *e) { return num(f_mount(&sd_card, "/", 0)); }
+L f_fs_mount([[maybe_unused]] L t, [[maybe_unused]] L *e) {
+  return num(f_mount(&sd_card, "/", 0));
+}
 
 L f_fs_open(L t, L *e) {
   I a = 0;
@@ -111,11 +114,13 @@ L f_fs_open(L t, L *e) {
   char path[256] = {0};
   printf("Path: ");
   scanf("%s", path);
-  return num(f_open(&file, path, open_flags));
+  return num(open(path, open_flags));
 }
 
 L f_fs_write(L t, L *e) {
-  UINT bw;
+  I a = 0;
+  L fd = evarg(&t, e, &a);
+  gc(fd);
   char contents[1024] = {0};
   printf("Line:\r\n");
   for (uint16_t i = 0; i < sizeof(contents); i++) {
@@ -125,27 +130,35 @@ L f_fs_write(L t, L *e) {
       break;
     }
   }
-  UINT result = f_write(&file, contents, strlen(contents), &bw);
-  f_sync(&file);
-  return cons(bw, result);
+  UINT result = write(fd, contents, strlen(contents));
+  return num(result);
 }
 
 L f_fs_lseek(L t, L *e) {
   I a = 0;
-  L x = evarg(&t, e, &a);
-  gc(x);
-  return num(f_lseek(&file, x));
+  L fd = evarg(&t, e, &a), offset = evarg(&t, e, &a), whence = evarg(&t, e, &a);
+  gc(fd);
+  gc(offset);
+  gc(whence);
+  return num(lseek(fd, offset, whence));
 }
 
 L f_fs_read(L t, L *e) {
+  I a = 0;
+  L fd = evarg(&t, e, &a);
+  gc(fd);
   char buf[1024] = {0};
-  UINT br;
-  f_read(&file, buf, sizeof(buf), &br);
+  UINT br = read(fd, buf, sizeof(buf));
   printf("Read: %s\r\n", buf);
   return num(br);
 }
 
-L f_fs_close(L t, L *e) { return num(f_close(&file)); }
+L f_fs_close(L t, L *e) {
+  I a = 0;
+  L fd = evarg(&t, e, &a);
+  gc(fd);
+  return num(close(fd));
+}
 
 // clang-format off
 #define UNICORN_EXT {"<<", f_lsh, 0},               \

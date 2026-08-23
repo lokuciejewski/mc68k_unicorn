@@ -159,3 +159,29 @@ void Serial_PrintStr(const Serial_Instance_e instance, const char *str) {
     // Wait for transmitter empty
   }
 }
+
+size_t Serial_WriteBytes(const Serial_Instance_e instance, const uint8_t *buf,
+                       size_t count) {
+  Serial_InstanceData_t inst = {0};
+  fill_instance_data(instance, &inst);
+  for (size_t i = 0; i < count; i++) {
+    // *tx_rdy_flag = false;
+    while (!(MEM(inst.sr) & 0b0100)) {
+    } // wait until TX is ready
+    MEM(inst.tb) = buf[i];
+  }
+  return count;
+}
+
+size_t Serial_ReadBytes(const Serial_Instance_e instance, uint8_t *buf,
+                      size_t count) {
+  Serial_InstanceData_t inst = {0};
+  fill_instance_data(instance, &inst);
+  for (size_t i = 0; i < count; i++) {
+    while (inst.rx_buffer->rx_head == inst.rx_buffer->rx_tail) {
+      // Wait for incoming byte
+    }
+    buf[i] = get_char_from_buffer(&inst);
+  }
+  return count;
+}

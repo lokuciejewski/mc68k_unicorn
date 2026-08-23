@@ -4,6 +4,9 @@
 // Increment any time the api changes
 #include <stdint.h>
 #define TRAP_API_VERSION 0x00000001
+#define FD_FIRST_FOR_HAL 0
+#define FD_LAST_FOR_HAL 2
+#define FD_FIRST_FOR_FS 3
 
 typedef enum : uint32_t {
   // Version call
@@ -28,6 +31,9 @@ typedef enum : uint32_t {
   // POSIX
   Syscall_Write,
   Syscall_Read,
+  Syscall_Open,
+  Syscall_Close,
+  Syscall_Lseek,
   Syscall_Exit,
   Syscall_Putc,
   Syscall_Getc

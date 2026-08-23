@@ -3,6 +3,8 @@
 #include "../inc/memory.h"
 
 extern uint8_t IRQ_TABLE[];
+
+extern void INTERRUPT trap14_entry();
 extern void INTERRUPT trap15_entry();
 
 #define EXC_PARAM
@@ -92,7 +94,9 @@ void Irq_Init(void) {
       }
     } else if (i < 48) {
       // Trap block
-      if (i == (EXCEPTION_TRAP + 15)) {
+      if (i == (EXCEPTION_TRAP + 14)) {
+        Irq_SetHandler(i, &trap14_entry);
+      } else if (i == (EXCEPTION_TRAP + 15)) {
         Irq_SetHandler(i, &trap15_entry);
       } else {
         Irq_SetHandler(i, &trap);

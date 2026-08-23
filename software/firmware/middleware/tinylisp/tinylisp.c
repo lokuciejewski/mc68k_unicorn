@@ -132,7 +132,7 @@ I not(L x) { return T(x) == NIL; }
 
 I let(L x) { return !not(x) && !not(cdr(x)); }
 
-L dup(L x) {
+L dupl(L x) {
   if ((T(x) & ~(CONS ^ CLOS)) == CONS)
     ++ref[ord(x) / 2];
   return x;
@@ -160,7 +160,7 @@ L evlis(L t, L e) {
   for (s = nil, p = &s; T(t) == CONS; p = &cell[ord(*p)], t = cdr(t))
     *p = cons(eval(car(t), e), nil);
   if (T(t) == ATOM)
-    *p = dup(assoc(t, e));
+    *p = dupl(assoc(t, e));
   return s;
 }
 
@@ -170,7 +170,7 @@ L evarg(L *t, L *e, I *a) {
     *t = assoc(*t, *e), *a = 1;
   x = car(*t);
   *t = cdr(*t);
-  return *a ? dup(x) : eval(x, *e);
+  return *a ? dupl(x) : eval(x, *e);
 }
 
 I isarg(L *t, L *e, I *a, L *x) {
@@ -180,7 +180,7 @@ I isarg(L *t, L *e, I *a, L *x) {
     return 0;
   *x = car(*t);
   *t = cdr(*t);
-  *x = *a ? dup(*x) : eval(*x, *e);
+  *x = *a ? dupl(*x) : eval(*x, *e);
   return 1;
 }
 
@@ -191,7 +191,7 @@ L f_eval(L t, L *e) {
   return y;
 }
 
-L f_quote(L t, L *_) { return dup(car(t)); }
+L f_quote(L t, L *_) { return dupl(car(t)); }
 
 L f_cons(L t, L *e) {
   I a = 0;
@@ -201,14 +201,14 @@ L f_cons(L t, L *e) {
 
 L f_car(L t, L *e) {
   I a = 0;
-  L x = evarg(&t, e, &a), y = dup(car(x));
+  L x = evarg(&t, e, &a), y = dupl(car(x));
   gc(x);
   return y;
 }
 
 L f_cdr(L t, L *e) {
   I a = 0;
-  L x = evarg(&t, e, &a), y = dup(cdr(x));
+  L x = evarg(&t, e, &a), y = dupl(cdr(x));
   gc(x);
   return y;
 }
@@ -318,7 +318,7 @@ L f_leta(L t, L *e) {
 }
 
 L f_lambda(L t, L *e) {
-  return closure(dup(car(t)), dup(car(cdr(t))), equ(*e, env) ? nil : dup(*e));
+  return closure(dupl(car(t)), dupl(car(cdr(t))), equ(*e, env) ? nil : dupl(*e));
 }
 
 L f_define(L t, L *e) {
@@ -359,14 +359,14 @@ struct {
 L eval(L x, L e) {
   I a;
   L f = nil, g, v, d;
-  dup(e);
+  dupl(e);
   while (1) {
     if (T(x) == ATOM) {
-      x = dup(assoc(x, e));
+      x = dupl(assoc(x, e));
       break;
     }
     if (T(x) != CONS) {
-      x = dup(x);
+      x = dupl(x);
       break;
     }
     g = f;
@@ -382,11 +382,11 @@ L eval(L x, L e) {
     if (T(f) != CLOS)
       err(3);
     v = car(car(f));
-    d = dup(not(cdr(f)) ? env : cdr(f));
+    d = dupl(not(cdr(f)) ? env : cdr(f));
     for (a = 0; T(v) == CONS; v = cdr(v))
       d = pair(car(v), evarg(&x, &e, &a), d);
     if (T(v) == ATOM)
-      d = pair(v, a ? dup(x) : evlis(x, e), d);
+      d = pair(v, a ? dupl(x) : evlis(x, e), d);
     x = cdr(car(f));
     gc(e);
     e = d;
