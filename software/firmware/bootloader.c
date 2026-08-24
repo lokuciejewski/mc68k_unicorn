@@ -1,4 +1,3 @@
-#include "drivers/sd_card/api/sd_card.h"
 #include "hal/inc/gpio.h"
 #include "hal/inc/irq.h"
 #include "hal/inc/serial.h"

@@ -165,10 +165,10 @@ L f_fs_close(L t, L *e) {
                     {"rmem", f_rmem, 0},            \
                     {"wmem", f_wmem, 0},            \
                     {"fs_mount", f_fs_mount, 0},    \
-                    {"fs_open", f_fs_open, 0},      \
-                    {"fs_write", f_fs_write, 0},    \
-                    {"fs_lseek", f_fs_lseek, 0},    \
-                    {"fs_read", f_fs_read, 0},      \
-                    {"fs_close", f_fs_close, 0},    \
+                    {"open", f_fs_open, 0},         \
+                    {"write", f_fs_write, 0},       \
+                    {"lseek", f_fs_lseek, 0},       \
+                    {"read", f_fs_read, 0},         \
+                    {"close", f_fs_close, 0},       \
                     {"delay", f_delay_ms, 0}
 // clang-format on
