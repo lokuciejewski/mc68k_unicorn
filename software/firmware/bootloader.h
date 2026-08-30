@@ -9,8 +9,6 @@
 #define EM_68K 4      /* Motorola 68000 series */
 #define PT_LOAD 1     /* Loadable segment */
 
-#define ELF_MAGIC_NUM (uint32_t)(0x7f454c46) // 0x74 E L F
-
 typedef struct {
   unsigned char e_ident[EI_NIDENT];
   uint16_t e_type;

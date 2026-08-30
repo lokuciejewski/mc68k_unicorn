@@ -27,6 +27,7 @@
 #endif
 
 extern L cell[N], nil, tru, env;
+extern I ord(L x);
 
 extern L evarg(L *t, L *e, I *a);
 extern void gc(L x);
@@ -109,28 +110,21 @@ L f_fs_mount([[maybe_unused]] L t, [[maybe_unused]] L *e) {
 
 L f_fs_open(L t, L *e) {
   I a = 0;
+  L path = evarg(&t, e, &a);
   L open_flags = evarg(&t, e, &a);
+  int fd = open(A + ord(path), open_flags);
+  gc(path);
   gc(open_flags);
-  char path[256] = {0};
-  printf("Path: ");
-  scanf("%s", path);
-  return num(open(path, open_flags));
+  return num(fd);
 }
 
 L f_fs_write(L t, L *e) {
   I a = 0;
   L fd = evarg(&t, e, &a);
+  L line = evarg(&t, e, &a);
+  UINT result = write(fd, A + ord(line), strlen(A + ord(line)));
   gc(fd);
-  char contents[1024] = {0};
-  printf("Line:\r\n");
-  for (uint16_t i = 0; i < sizeof(contents); i++) {
-    contents[i] = getchar();
-    if (contents[i] == '\r' || contents[i] == '\n') {
-      contents[i] = 0;
-      break;
-    }
-  }
-  UINT result = write(fd, contents, strlen(contents));
+  gc(line);
   return num(result);
 }
 
@@ -147,9 +141,9 @@ L f_fs_read(L t, L *e) {
   I a = 0;
   L fd = evarg(&t, e, &a);
   gc(fd);
-  char buf[1024] = {0};
+  char buf[128] = {0};
   UINT br = read(fd, buf, sizeof(buf));
-  printf("Read: %s\r\n", buf);
+  printf("%s\r\n", buf);
   return num(br);
 }
 
