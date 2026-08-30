@@ -17,5 +17,11 @@ typedef enum : uint8_t {
   UniRes_SD_PowerUpBitNotSet,
   UniRes_SD_NotSDCard,
 
+  // Bootloader codes
+  UniRes_InvalidElf,
+
+  // FS codes
+  UniRes_NoSuchFile,
+
   UniRes_NumOf,
 } UnicornResult_e;

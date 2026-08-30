@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define I unsigned
 #define L double
 #define A (char *)cell
-#define N 8192
+#define N 2048
 
 I ref[N / 2], hp, fp, lp, fn, ATOM = 0x7ff8, PRIM = 0x7ff9, CONS = 0x7ffa,
                               CLOS = 0x7ffb, NIL = 0x7ffc;

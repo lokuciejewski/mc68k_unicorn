@@ -1,3 +1,4 @@
+#include "bootloader.h"
 #include "hal/inc/gpio.h"
 #include "hal/inc/irq.h"
 #include "hal/inc/serial.h"
@@ -5,12 +6,13 @@
 #include "hal/inc/time.h"
 #include "system/result_codes.h"
 #include <stdio.h>
+#include <string.h>
 
 extern int tinylisp();
 
 int main();
 
-static volatile uint8_t USER_STACK[32768] = {0};
+static volatile uint8_t USER_STACK[8192] = {0};
 
 extern char __data_source[]; /* LMA – load address in flash */
 extern char __data_start[];  /* VMA – run address in RAM */
@@ -22,7 +24,7 @@ inline static void __attribute__((always_inline)) enter_user_mode(void) {
   __asm__ volatile("move.l %0, %%usp\n\t" // Set user stack
                    "and.w #0xdfff, %%sr"  // Enter user mode
                    :
-                   : "a"(USER_STACK + 32768 - 4)
+                   : "a"(USER_STACK + 8192 - 4)
                    : "memory", "cc");
 }
 
@@ -77,6 +79,25 @@ int main() {
   return tinylisp();
 }
 
+static inline bool is_elf_valid(Elf32_Ehdr *hdr) {
+  return memcmp(hdr->e_ident,
+                "\x7f"
+                "ELF",
+                4) == 0 &&
+         hdr->e_ident[4] == ELFCLASS32 && hdr->e_ident[5] == ELFDATA2MSB &&
+         hdr->e_machine == EM_68K;
+}
+
 UnicornResult_e load_and_run_elf(const char *filename) {
-  return UniRes_NotImplemented;
+  FILE *f = fopen(filename, "r");
+  if (f != nullptr) {
+    Elf32_Ehdr hdr = {0};
+    fread((void *)&hdr, sizeof(Elf32_Ehdr), 1, f);
+    if (!is_elf_valid(&hdr)) {
+      return UniRes_InvalidElf;
+    }
+
+
+  }
+  return UniRes_NoSuchFile;
 }
