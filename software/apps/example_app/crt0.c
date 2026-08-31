@@ -1,3 +1,4 @@
+/// crt0 file for any application loaded by the bootloader
 #include <stdint.h>
 
 extern uint8_t __stack[];
@@ -5,7 +6,7 @@ extern int main(int, char **);
 extern void __libc_init_array(void);
 
 static void return_to_monitor(void) {
-  register uint32_t d0 __asm__("d0") = 19; // Syscall_Exit
+  register uint32_t d0 __asm__("d0") = 19; // Syscall_Exit, TODO: get this value from syscalls.h
   __asm__ volatile("trap #15" : "+r"(d0) : : "memory");
 }
 
@@ -22,5 +23,6 @@ void _start(void) {
                    : "memory", "cc");
 
   (void)main(0, 0);
-  return_to_monitor();
+  return_to_monitor(); 
+  // alternatively, while(1) {}
 }
