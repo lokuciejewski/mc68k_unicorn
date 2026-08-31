@@ -6,6 +6,7 @@ project(example_app C)
 
 # Add C source files
 set(C_SOURCES
+    crt0.c
     main.c
 )
 
@@ -22,7 +23,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
-unicorn_set_pie(example_app.elf)
 target_link_options(example_app.elf PRIVATE -T${CMAKE_CURRENT_SOURCE_DIR}/unicorn_app_v1.ld)
 
-unicorn_add_bin_target(example_app.elf)
+unicorn_add_listing(example_app.elf)
+unicorn_strip_elf(example_app.elf)

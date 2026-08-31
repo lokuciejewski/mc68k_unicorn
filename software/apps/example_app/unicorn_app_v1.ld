@@ -1,30 +1,10 @@
 /* unicorn_app_v1.ld */
-INCLUDE picolibc.ld
 
-SECTIONS
-{
-    . = 0;                      /* everything relative to 0 */
+__flash = 0x00010000;
+__flash_size = 0K; /* increase if ever needed */
+__ram = __flash + __flash_size;
+__ram_size = 1M - 32K; /* subtract bootloader ram + IRQ table*/
 
-    .text : {
-        *(.text*)
-        *(.rodata*)
-        *(.got*)                /* GOT must be present for PIE */
-        *(.got.plt*)
-    } > ram
+__stack_size = 8192;
 
-    .data : {
-        *(.data*)
-    } > ram
-
-    .bss : {
-        *(.bss*)
-        *(COMMON)
-    } > ram
-
-    /* symbols the bootloader / crt0 will use */
-    _etext = .;
-    _edata = .;
-    _end   = .;
-
-    /* stack grows downward from whatever the bootloader sets */
-}
+INCLUDE picolibc_noflash.ld

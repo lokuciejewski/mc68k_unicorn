@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define I unsigned
 #define L double
 #define A (char *)cell
-#define N 2048
+#define N 1024
 
 I ref[N / 2], hp, fp, lp, fn, ATOM = 0x7ff8, PRIM = 0x7ff9, CONS = 0x7ffa,
                               CLOS = 0x7ffb, NIL = 0x7ffc;
@@ -191,7 +191,7 @@ L f_eval(L t, L *e) {
   return y;
 }
 
-L f_quote(L t, L *_) { return dupl(car(t)); }
+L f_quote(L t, [[maybe_unused]] L *_) { return dupl(car(t)); }
 
 L f_cons(L t, L *e) {
   I a = 0;
@@ -318,7 +318,8 @@ L f_leta(L t, L *e) {
 }
 
 L f_lambda(L t, L *e) {
-  return closure(dupl(car(t)), dupl(car(cdr(t))), equ(*e, env) ? nil : dupl(*e));
+  return closure(dupl(car(t)), dupl(car(cdr(t))),
+                 equ(*e, env) ? nil : dupl(*e));
 }
 
 L f_define(L t, L *e) {

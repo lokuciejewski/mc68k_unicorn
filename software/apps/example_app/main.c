@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int _start() {
-  printf("Hello from custom app!\r\n");
+int main() {
+  printf("Hello from the custom app!\r\n");
   return 0;
 }

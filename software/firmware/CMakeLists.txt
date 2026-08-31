@@ -63,6 +63,7 @@ target_link_options(unicorn_firmware PRIVATE
 
 
 unicorn_add_bin_target(unicorn_firmware)
+unicorn_add_listing(unicorn_firmware)
 
 # Split binary into lower and upper
 add_custom_command(TARGET unicorn_firmware POST_BUILD

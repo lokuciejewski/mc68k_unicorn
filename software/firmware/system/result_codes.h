@@ -9,19 +9,16 @@ typedef enum : uint8_t {
   UniRes_GeneralError,
   UniRes_Timeout,
   UniRes_InvalidPtr,
+  UniRes_InvalidData,
+  UniRes_InvalidHeader,
   UniRes_NotImplemented,
+  UniRes_NotFound,
 
   // SD card codes
   UniRes_SD_CheckPatternMismatch,
   UniRes_SD_IncompatibleVoltageRange,
   UniRes_SD_PowerUpBitNotSet,
   UniRes_SD_NotSDCard,
-
-  // Bootloader codes
-  UniRes_InvalidElf,
-
-  // FS codes
-  UniRes_NoSuchFile,
 
   UniRes_NumOf,
 } UnicornResult_e;

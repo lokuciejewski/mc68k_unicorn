@@ -7,6 +7,7 @@
 #include "syscalls.h"
 #include <fcntl.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 extern int tinylisp();
@@ -162,7 +163,48 @@ uint32_t Trap15_Handler(uint32_t func_id, uint32_t arg1, uint32_t arg2,
 
 static FIL *files[MAX_CONCURRENTLY_OPEN_FILES] = {nullptr};
 
-static int t14_open([[maybe_unused]] const char *path,
+static BYTE convert_posix_to_fatfs_flags(int flags) {
+  BYTE fatfs_flags = 0;
+  switch (flags & O_ACCMODE) {
+  case O_RDONLY:
+    fatfs_flags |= FA_READ;
+    break;
+  case O_WRONLY:
+    fatfs_flags |= FA_WRITE;
+    break;
+  case O_RDWR:
+    fatfs_flags |= FA_READ | FA_WRITE;
+    break;
+  default:
+    return 0; // Invalid flags
+  }
+
+  if (flags & O_CREAT) {
+    if (flags & O_EXCL) {
+      fatfs_flags |= FA_CREATE_NEW;
+    } else if (flags & O_TRUNC) {
+      fatfs_flags |= FA_CREATE_ALWAYS;
+    } else {
+      fatfs_flags |= FA_OPEN_ALWAYS;
+    }
+  } else {
+    if (flags & O_TRUNC) {
+      // POSIX allows O_TRUNC without O_CREAT, no equivalent for fatfs, instead
+      // open existing and truncate.
+      fatfs_flags |= FA_CREATE_ALWAYS;
+    } else {
+      fatfs_flags |= FA_OPEN_EXISTING;
+    }
+  }
+
+  if (flags & O_APPEND) {
+    fatfs_flags |= FA_OPEN_APPEND;
+  }
+
+  return fatfs_flags;
+}
+
+static int t14_open(const char *path, uint32_t flags,
                     [[maybe_unused]] int mode) {
   int first_empty = -1;
   for (int i = 0; i < (int)MAX_CONCURRENTLY_OPEN_FILES; i++) {
@@ -175,7 +217,8 @@ static int t14_open([[maybe_unused]] const char *path,
     return first_empty; // Too many open files
   }
   files[first_empty] = malloc(sizeof(FIL));
-  FRESULT res = f_open(files[first_empty], path, mode);
+  FRESULT res =
+      f_open(files[first_empty], path, convert_posix_to_fatfs_flags(flags));
   if (res != FR_OK) {
     free(files[first_empty]);
     files[first_empty] = nullptr;
@@ -184,7 +227,7 @@ static int t14_open([[maybe_unused]] const char *path,
   return first_empty + FD_FIRST_FOR_FS;
 }
 
-static int t14_close([[maybe_unused]] int fd) {
+static int t14_close(int fd) {
   size_t idx = (size_t)fd - FD_FIRST_FOR_FS;
   FRESULT res = f_close(files[idx]); // TODO: convert to UnicornResult??
   if (res == FR_OK) {
@@ -194,10 +237,37 @@ static int t14_close([[maybe_unused]] int fd) {
   return res;
 }
 
-static off_t t14_lseek([[maybe_unused]] int fd, [[maybe_unused]] off_t offset,
-                       [[maybe_unused]] int whence) {
-  return 0;
+static off_t t14_lseek(int fd, off_t offset, int whence) {
+  switch (fd) {
+  case 0:      // stdout
+  case 1:      // stdin
+  case 2:      // stderr
+    return -1; // invalid fd
+  default: {
+    off_t new_offset = 0;
+    size_t idx = fd - FD_FIRST_FOR_FS;
+    switch (whence) {
+    case SEEK_SET:
+      new_offset = offset;
+      break;
+    case SEEK_CUR:
+      new_offset = (off_t)files[idx]->fptr + offset;
+      break;
+    case SEEK_END:
+      new_offset = (off_t)files[idx]->obj.objsize + offset;
+      break;
+    }
+    if (new_offset < 0) {
+      return -1;
+    }
+    if (f_lseek(files[idx], new_offset) != FR_OK) {
+      return -1;
+    }
+    return new_offset;
+  }
+  }
 }
+
 static size_t t14_write(int fd, const uint8_t *buf, size_t count) {
   switch (fd) {
   case 0:     // stdout
@@ -212,7 +282,6 @@ static size_t t14_write(int fd, const uint8_t *buf, size_t count) {
     return bytes_written;
   }
   }
-  return 0;
 }
 
 static size_t t14_read(int fd, uint8_t *buf, size_t count) {
@@ -228,7 +297,6 @@ static size_t t14_read(int fd, uint8_t *buf, size_t count) {
     return bytes_read;
   }
   }
-  return 0;
 }
 
 uint32_t Trap14_Handler(uint32_t func_id, uint32_t arg1, uint32_t arg2,
@@ -255,7 +323,7 @@ uint32_t Trap14_Handler(uint32_t func_id, uint32_t arg1, uint32_t arg2,
   case Syscall_Getc:
     break;
   case Syscall_Open:
-    return t14_open((const char *)arg1, (int)arg2);
+    return t14_open((const char *)arg1, (uint32_t)arg2, (int)arg3);
   case Syscall_Close:
     return t14_close((int)arg1);
   case Syscall_Lseek:

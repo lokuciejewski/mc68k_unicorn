@@ -7,6 +7,8 @@
 #include "../../hal/inc/memory.h"
 #include "../../hal/inc/time.h"
 #include "../fatfs/api/ff.h"
+#include "bootloader.h"
+#include "result_codes.h"
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -23,7 +25,7 @@
 #define A (char *)cell
 #endif
 #ifndef N
-#define N 8192
+#define N 1024
 #endif
 
 extern L cell[N], nil, tru, env;
@@ -154,15 +156,32 @@ L f_fs_close(L t, L *e) {
   return num(close(fd));
 }
 
+L f_bootloader_exec(L t, L *e) {
+  I a = 0;
+  L path = evarg(&t, e, &a);
+  uintptr_t entry_addr = 0;
+  int return_val = -1;
+  UnicornResult_e load_res = load_elf(A + ord(path), &entry_addr);
+  gc(path);
+  if (load_res == UniRes_Ok) {
+    return_val = ((app_entry_t)entry_addr)();
+    return num(return_val);
+  } else {
+    return num(load_res);
+  }
+}
+
 // clang-format off
 #define UNICORN_EXT {"<<", f_lsh, 0},               \
                     {"rmem", f_rmem, 0},            \
                     {"wmem", f_wmem, 0},            \
-                    {"fs_mount", f_fs_mount, 0},    \
+                    {"exec", f_bootloader_exec, 0}, \
+                    {"mount", f_fs_mount, 0},       \
                     {"open", f_fs_open, 0},         \
                     {"write", f_fs_write, 0},       \
                     {"lseek", f_fs_lseek, 0},       \
                     {"read", f_fs_read, 0},         \
                     {"close", f_fs_close, 0},       \
+                    {"q", f_quote, 0},              \
                     {"delay", f_delay_ms, 0}
 // clang-format on

@@ -65,7 +65,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${_unicorn_link_flags_str}" CACHE STRING "Linker fla
 
 # Macros
 
-# Macro to turn an ELF into a raw binary + listing
+# Macro to turn an ELF into a raw binary
 macro(unicorn_add_bin_target target)
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O binary
@@ -73,6 +73,10 @@ macro(unicorn_add_bin_target target)
                 $<TARGET_FILE_DIR:${target}>/${target}.bin
         COMMENT "Generating ${target}.bin"
     )
+endmacro()
+
+# Macro to generate a listing
+macro(unicorn_add_listing target)
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND ${CMAKE_OBJDUMP} -m68010 -a -h -d -S -l -r -C
                 $<TARGET_FILE:${target}>
@@ -81,11 +85,11 @@ macro(unicorn_add_bin_target target)
     )
 endmacro()
 
-# Macro to set PIE for an executable
-macro(unicorn_set_pie target)
-    set_target_properties(${target} PROPERTIES
-        POSITION_INDEPENDENT_CODE ON
+# Macro to strip the elf executable
+macro(unicorn_strip_elf target)
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} --strip-unneeded
+                $<TARGET_FILE:${target}>
+        COMMENT "Stripping ${target}.elf executable"
     )
-    target_compile_options(${target} PRIVATE -fPIE)
-    target_link_options(${target} PRIVATE -pie)
 endmacro()
