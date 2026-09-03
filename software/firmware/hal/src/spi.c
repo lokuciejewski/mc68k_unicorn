@@ -29,10 +29,6 @@ static inline void mosi(uint8_t state) {
   }
 }
 
-static inline uint8_t miso(void) {
-  return (uint8_t)((MEM(DUART_IP) & MISO) != 0);
-}
-
 void SPI_Init(void) {
   clk(1);
   mosi(1);
@@ -40,20 +36,29 @@ void SPI_Init(void) {
 }
 
 uint8_t SPI_WriteByteNoSel(uint8_t byte) {
-  uint8_t read_byte = 0;
-  clk(0);
+  uint8_t read = 0;
+// Unrolled loop read for faster speeds
+#define BIT_X(n)                                                               \
+  if ((byte >> n) & 1)                                                         \
+    MEM(DUART_OPR_RESET) = MOSI;                                               \
+  else                                                                         \
+    MEM(DUART_OPR_SET) = MOSI;                                                 \
+  MEM(DUART_OPR_RESET) = SCLK;                                                 \
+  if (MEM(DUART_IP) & MISO)                                                    \
+    read |= (1 << n);                                                          \
+  MEM(DUART_OPR_SET) = SCLK;
 
-  for (int8_t i = 7; i >= 0; i--) { // SPI should be MSB first
-    mosi((byte >> i) & 1);
-    clk(1);
-    if (miso()) {
-      read_byte |= (1 << i);
-    }
-    delay_2us();
-    clk(0);
-    delay_2us();
-  }
-  return read_byte;
+  BIT_X(7);
+  BIT_X(6);
+  BIT_X(5);
+  BIT_X(4);
+  BIT_X(3);
+  BIT_X(2);
+  BIT_X(1);
+  BIT_X(0);
+
+#undef BIT_X
+  return read;
 }
 
 uint8_t SPI_WriteByte(uint8_t byte) {
