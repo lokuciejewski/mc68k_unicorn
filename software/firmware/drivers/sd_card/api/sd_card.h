@@ -2,6 +2,7 @@
 #pragma once
 
 #include "system/result_codes.h"
+#include <stddef.h>
 #include <stdint.h>
 
 typedef enum {
@@ -16,6 +17,9 @@ SD_CardType_e SD_Type(void);
 
 // Supplied buffer MUST be 512 bytes long
 UnicornResult_e SD_ReadBlock(uint32_t block_num, uint8_t *buffer);
+
+// Supplied buffer MUST be at least 512 * num_of_blocks
+UnicornResult_e SD_ReadBlocks(uint32_t start_block_num, size_t num_of_blocks, uint8_t *buffer);
 
 // Write the buffer (MUST be 512 bytes long)
 UnicornResult_e SD_WriteBlock(uint32_t block_num, const uint8_t *buffer);

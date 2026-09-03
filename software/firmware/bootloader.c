@@ -103,11 +103,12 @@ UnicornResult_e load_elf(const char *filename, uintptr_t *out_entry_point) {
   FILE *f = fopen(filename, "r");
   size_t read = 0;
   if (f != nullptr) {
+    printf("LOAD from %s\r\n", filename);
     Elf32_Ehdr ehdr = {0};
     read = fread((void *)&ehdr, sizeof(Elf32_Ehdr), 1, f);
     if (1 == read) {
       if (!is_ehdr_valid(&ehdr)) {
-        printf("Elf header is invalid\r\n");
+        printf("CHECK ehdr FAIL\r\n");
         return UniRes_InvalidHeader;
       }
       // Elf is valid, load all program headers
@@ -120,19 +121,23 @@ UnicornResult_e load_elf(const char *filename, uintptr_t *out_entry_point) {
           case PT_LOAD: {
             if (!is_phdr_valid(&phdr)) {
               fclose(f);
-              printf("Program header %d is invalid\r\n", ph);
+              printf("CHECK phdr%d FAIL\r\n", ph);
               return UniRes_InvalidHeader;
             }
+            printf("LOAD phdr%d [%lu bytes] @ 0x%06lx\r\n", ph, phdr.p_filesz,
+                   phdr.p_vaddr);
             // PHDR valid, load it
             (void)fseek(f, phdr.p_offset, SEEK_SET);
             read = fread((void *)phdr.p_vaddr, 1, phdr.p_filesz, f);
             if (phdr.p_filesz == read) {
-              memset((void *)(phdr.p_vaddr + phdr.p_filesz), 0,
-                     (phdr.p_memsz -
-                      phdr.p_filesz)); // Zero out the rest of the segment
+              size_t zero_addr = phdr.p_vaddr + phdr.p_filesz;
+              size_t zero_count = phdr.p_memsz - phdr.p_filesz;
+              printf("ZERO [%lu bytes] @ 0x%06lx\r\n", zero_count, zero_addr);
+              memset((void *)(zero_addr), 0,
+                     (zero_count)); // Zero out the rest of the segment
             } else {
               fclose(f);
-              printf("Read of %d header contents failed: %lu\r\n", ph, read);
+              printf("READ phdr%d FAIL: %lu\r\n", ph, read);
               return UniRes_GeneralError;
             }
           } break;
@@ -142,17 +147,18 @@ UnicornResult_e load_elf(const char *filename, uintptr_t *out_entry_point) {
           }
         } else {
           fclose(f);
-          printf("Read of header %d failed: %lu\r\n", ph, read);
+          printf("READ phdr%d FAIL: %lu\r\n", ph, read);
           return UniRes_GeneralError;
         }
       }
 
       *out_entry_point = ehdr.e_entry;
       fclose(f);
+      printf("LOAD OK\r\n");
       return UniRes_Ok;
     } else {
       fclose(f);
-      printf("Read of elf header failed: %lu\r\n", read);
+      printf("READ ehdr FAIL: %lu\r\n", read);
       return UniRes_GeneralError;
     }
   }

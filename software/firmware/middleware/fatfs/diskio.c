@@ -12,7 +12,6 @@
 #include "api/ff.h" /* Basic definitions of FatFs */
 #include <stdbool.h>
 
-
 typedef enum {
   SD_Card,
 } DriveID_e;
@@ -71,8 +70,12 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
 ) {
   switch (pdrv) {
   case SD_Card: {
-    for (UINT i = 0; i < count; i++) {
-      if (SD_ReadBlock(sector + i, &buff[512 * i]) != UniRes_Ok) {
+    if (count == 1) {
+      if (SD_ReadBlock(sector, buff) != UniRes_Ok) {
+        return RES_ERROR;
+      }
+    } else {
+      if (SD_ReadBlocks(sector, count, buff)) {
         return RES_ERROR;
       }
     }

@@ -41,6 +41,14 @@
 #define CMD17 17
 #define CMD17_CRC 0
 
+// CMD18 - READ_MULTIPLE_BLOCK
+#define CMD18 18
+#define CMD18_CRC 0
+
+// CMD12 - STOP_ALL_TRANSMISSIONS
+#define CMD12 12
+#define CMD12_CRC 0
+
 // CMD24 - WRITE_SINGLE_BLOCK
 #define CMD24 24
 #define CMD24_CRC 0
@@ -121,7 +129,7 @@ static void SD_ReadResponse(SD_Response_e resp, uint8_t *response) {
 }
 
 static UnicornResult_e SD_SendCommand_ACMD41(uint8_t *response,
-                                          SD_CardType_e *card_type) {
+                                             SD_CardType_e *card_type) {
   for (uint8_t i = 0; i < 100; i++) {
     SD_Select();
     SD_SendCommand(CMD55, CMD55_ARG, CMD55_CRC);
@@ -252,7 +260,7 @@ UnicornResult_e SD_ReadBlock(uint32_t block_num, uint8_t *buffer) {
   SD_Select();
   SD_SendCommand(CMD17, block_num, CMD17_CRC);
   SD_ReadResponse(SD_Response1, &sd_response);
-  if (sd_response != 0xff) {
+  if (sd_response == 0x00) {
 
     // Wait up to 100ms for the "Start Block" response
     uint8_t read = SD_WaitForReady(SD_MAX_READ_ATTEMPTS);
@@ -270,7 +278,46 @@ UnicornResult_e SD_ReadBlock(uint32_t block_num, uint8_t *buffer) {
   }
 
   SD_Deselect();
-  return UniRes_Ok;
+  return sd_response;
+}
+
+UnicornResult_e SD_ReadBlocks(uint32_t start_block_num, size_t num_of_blocks,
+                              uint8_t *buffer) {
+  uint8_t sd_response = 0xff;
+
+  if (card_type == SD_V1_SDSC) {
+    start_block_num *=
+        512; // SDSC is byte-addressed, the rest are block-addressed
+  }
+
+  SD_Select();
+  SD_SendCommand(CMD18, start_block_num, CMD18_CRC);
+  SD_ReadResponse(SD_Response1, &sd_response);
+  if (sd_response == 0x00) {
+    for (size_t block = 0; block < num_of_blocks; block++) {
+      // Wait up to 100ms for the "Start Block" response
+      uint8_t read = SD_WaitForReady(SD_MAX_READ_ATTEMPTS);
+      if (read == SD_START_BLOCK) {
+        for (uint16_t i = 0; i < SD_BLOCK_SIZE; i++) {
+          buffer[(block * SD_BLOCK_SIZE) + i] = SD_ReadByte();
+        }
+
+        SD_ReadByte();
+        SD_ReadByte(); // Read 16-bit CRC
+      } else {
+        sd_response = UniRes_GeneralError;
+        break;
+      }
+    }
+    SD_SendCommand(CMD12, 0, CMD12_CRC);
+    uint8_t cmd12_response;
+    SD_ReadResponse(SD_Response1, &cmd12_response);
+  } else {
+    sd_response = UniRes_GeneralError;
+  }
+
+  SD_Deselect();
+  return sd_response;
 }
 
 UnicornResult_e SD_WriteBlock(uint32_t block_num, const uint8_t *buffer) {
