@@ -44,4 +44,5 @@ typedef struct {
 
 typedef int (*app_entry_t)(void);
 
+UnicornResult_e try_booting_from_bootord(void);
 UnicornResult_e load_elf(const char *filename, uintptr_t *out_entry_point);

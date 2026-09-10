@@ -1,4 +1,5 @@
 #include "bootloader.h"
+#include "ff.h"
 #include "hal/inc/gpio.h"
 #include "hal/inc/irq.h"
 #include "hal/inc/serial.h"
@@ -8,6 +9,10 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+
+#define BOOT_ORDER_FILE "/bootord"
+#define DEFAULT_STDIN_SERIAL Serial_A
+#define BOOT_TIMEOUT_S 3U
 
 extern int tinylisp();
 extern uint8_t __ram[];
@@ -77,9 +82,13 @@ void _start(void) {
   main();
 }
 
+static FATFS sd_card;
 int main() {
   // enter_user_mode();
   printf("\r\nUnicorn SBC v1\r\n");
+  f_mount(&sd_card, "/", 0);
+  int res = try_booting_from_bootord();
+  printf("BOOT: %d\r\n", res);
   return tinylisp();
 }
 
@@ -160,6 +169,31 @@ UnicornResult_e load_elf(const char *filename, uintptr_t *out_entry_point) {
       fclose(f);
       printf("READ ehdr FAIL: %lu\r\n", read);
       return UniRes_GeneralError;
+    }
+  }
+  return UniRes_NotFound;
+}
+
+UnicornResult_e try_booting_from_bootord(void) {
+  FILE *f = fopen(BOOT_ORDER_FILE, "r");
+  if (f != nullptr) {
+    char filepath[128] = {0};
+    uint8_t read = fread(filepath, 1, 128, f);
+    fclose(f);
+    if (read > 0) {
+      for (uint8_t i = 0; i < read; i++) {
+        if (filepath[i] == '\r' || filepath[i] == '\n') {
+          filepath[i] = '\0';
+        }
+      }
+      uintptr_t entry_addr = 0;
+      UnicornResult_e load_res = load_elf(filepath, &entry_addr);
+      if (load_res == UniRes_Ok) {
+        (void)((app_entry_t)entry_addr)();
+        return UniRes_Ok;
+      }
+    } else {
+      return UniRes_InvalidData;
     }
   }
   return UniRes_NotFound;

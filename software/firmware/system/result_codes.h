@@ -13,6 +13,7 @@ typedef enum : uint8_t {
   UniRes_InvalidHeader,
   UniRes_NotImplemented,
   UniRes_NotFound,
+  UniRes_Skipped,
 
   // SD card codes
   UniRes_SD_CheckPatternMismatch,

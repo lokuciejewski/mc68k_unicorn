@@ -776,7 +776,7 @@
         "uuid": "c8562b54-5b7c-4807-82d8-9ba19cd22cb7"
       }
     ],
-    "used_designators": "JP9,JP13,TP11,U11-12",
+    "used_designators": "J3,C1-2,#PWR29-30,#PWR43-44,R3-4,JP9,JP13,TP11,U11-12",
     "variants": [
       {
         "name": "DRAM only"
