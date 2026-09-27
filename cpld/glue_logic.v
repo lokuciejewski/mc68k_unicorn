@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 // CPLD Glue Logic for mc68k SBC - Unicorn v1
-// Fixed DTACK + memory map
 
 module glue_logic (
     input wire A1,
